@@ -1,7 +1,6 @@
 # EMG files
 emg/EMG_data.txt
-emg/EMG_muscles.txt
-emg/norm_data.txt
+emg/EMG_norm_data.txt
 emg/EMG_time.txt
 
 # Byte-compiled / optimized / DLL files
