@@ -78,7 +78,7 @@ def osim_control(osim_file, step_size, n_steps, emg_period, integ_acc=0.0001,
         muscle_names[i] = model.model.getMuscles().get(i).getName()
 
     #: Controls
-    controls = def_controls(emg_period, muscle_names, n_steps, step_size, plot=True)
+    controls = def_controls(emg_period, muscle_names, n_steps, step_size, plot=False)
 
     #: Initialize
     model.reset()
