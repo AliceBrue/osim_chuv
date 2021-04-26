@@ -19,7 +19,11 @@ def main():
     osim_file = 'models/Henri.osim'
     osim_file = modify_Millard(osim_file, ignore_tendon='true', fiber_damping=0.001, ignore_dyn='true')  # set
                                # ignore_dyn to 'true' to provide EMG data as muscle activation
-    osim_file = lock_Coord(osim_file, ['shoulder_rot', 'elv_angle'], 'false')  # can be tested with 'true'
+    #osim_file = lock_Coord(osim_file, ['shoulder_rot', 'elv_angle'], 'false')
+    osim_file = modify_default_Coord(osim_file, 'elv_angle', 1.2)
+    osim_file = modify_default_Coord(osim_file, 'r_shoulder_elev', 0.14)
+    osim_file = modify_default_Coord(osim_file, 'shoulder_rot', 0.16)
+    osim_file = modify_default_Coord(osim_file, 'elbow_flexion', 0.29)
 
     #: EMG control
     emg_folder = 'emg/'
