@@ -17,11 +17,11 @@ def modify_Millard(osim_file, ignore_tendon=True, fiber_damping=0.001, ignore_dy
     for l in range(len(lines)):
         line = lines[l]
         if line.split()[0].split('>')[0] == '<ignore_tendon_compliance':
-            new_lines[l] = '                    <ignore_tendon_compliance>'+ignore_tendon+'</ignore_tendon_compliance>\n'
+            new_lines[l] = '\t\t\t\t\t<ignore_tendon_compliance>'+ignore_tendon+'</ignore_tendon_compliance>\n'
         elif line.split()[0].split('>')[0] == '<fiber_damping':
-            new_lines[l] = '                    <fiber_damping>'+str(fiber_damping)+'</fiber_damping>\n'
+            new_lines[l] = '\t\t\t\t\t<fiber_damping>'+str(fiber_damping)+'</fiber_damping>\n'
         elif line.split()[0].split('>')[0] == '<ignore_activation_dynamics':
-            new_lines[l] = '                    <ignore_activation_dynamics>'+ignore_dyn+'</ignore_activation_dynamics>\n'
+            new_lines[l] = '\t\t\t\t\t<ignore_activation_dynamics>'+ignore_dyn+'</ignore_activation_dynamics>\n'
     with open(osim_file, 'w') as file:
         file.writelines(new_lines)
     return osim_file
@@ -42,7 +42,7 @@ def able_Muscle(osim_file, muscles, able):
         line = lines[l]
         if len(line.split()[0].split('<')) > 1 and line.split()[0].split('<')[1] == 'Millard2012EquilibriumMuscle':
             if line.split()[1].split('"')[1] in muscles:
-                new_lines[l+2] = '                    <appliesForce>'+able+'</appliesForce>\n'
+                new_lines[l+2] = '\t\t\t\t\t<appliesForce>'+able+'</appliesForce>\n'
     with open(osim_file, 'w') as file:
         file.writelines(new_lines)
     return osim_file
@@ -63,7 +63,7 @@ def lock_Coord(osim_file, coords, lock):
         line = lines[l]
         if len(line.split()[0].split('<')) > 1 and line.split()[0].split('<')[1] == 'Coordinate':
             if line.split()[1].split('"')[1] in coords:
-                new_lines[l+10] = '                            <locked>'+lock+'</locked>\n'
+                new_lines[l+10] = '\t\t\t\t\t\t\t<locked>'+lock+'</locked>\n'
     with open(osim_file, 'w') as file:
         file.writelines(new_lines)
     return osim_file
@@ -84,7 +84,61 @@ def modify_default_Coord(osim_file, coord, value):
         line = lines[l]
         if len(line.split()[0].split('<')) > 1 and line.split()[0].split('<')[1] == 'Coordinate':
             if line.split()[1].split('"')[1] == coord:
-                new_lines[l + 2] = '                            <default_value>'+str(value)+'</default_value>\n'
+                new_lines[l + 2] = '\t\t\t\t\t\t\t<default_value>'+str(value)+'</default_value>\n'
+    with open(osim_file, 'w') as file:
+        file.writelines(new_lines)
+    return osim_file
+
+
+def modify_elbow_k(osim_file, k=1, min_angle=90, transition=50):
+    """
+    Modify ALEx elbow spring stiffness
+    INPUTS: - osim_file: string, path to osim model
+            - k: float, ALEx elbow spring stiffness
+            - min_angle: float, limit before spring action
+            - transition: float, how far beyond the limit the stiffness becomes constant
+    OUTPUT: - osim_file: string, path to modified osim model
+    """
+    file = open(osim_file, 'r')
+    lines = file.readlines()
+    new_lines = lines
+    for l in range(len(lines)):
+        line = lines[l]
+        if len(line.split()[0].split('<')) > 1 and line.split()[0].split('<')[1] == 'CoordinateLimitForce':
+            if line.split()[1].split('"')[1] == 'elbow_flexion_damping':
+                new_lines[l+10] = '\t\t\t\t\t<lower_stiffness>'+str(k)+'</lower_stiffness>\n'
+                new_lines[l + 12] = '\t\t\t\t\t<lower_limit>'+str(min_angle)+'</lower_limit>\n'
+                new_lines[l + 16] = '\t\t\t\t\t<transition>'+str(transition)+'</transition>\n'
+    with open(osim_file, 'w') as file:
+        file.writelines(new_lines)
+    return osim_file
+
+
+def min_acti_Muscle(osim_file, muscles, min_acti):
+    """
+    Modify muscles min activation
+    INPUTS: - osim_file: string, path to osim model
+            - muscles: string array, list of muscles to modify
+            - min_acti: array, min activation values
+    OUTPUT: - osim_file: string, path to modified osim model
+    """
+    file = open(osim_file, 'r')
+    lines = file.readlines()
+    new_lines = lines
+    mod = False
+    for l in range(len(lines)):
+        line = lines[l]
+        if len(line.split()[0].split('<')) > 1 and line.split()[0].split('<')[1] == 'Millard2012EquilibriumMuscle':
+            if line.split()[1].split('"')[1] in muscles:
+                mod = True
+                ind = muscles.index(line.split()[1].split('"')[1])
+        if mod and len(line.split()[0].split('<')) > 1:
+            print(line.split()[0].split('<')[1].split('>')[0])
+        if mod and len(line.split()[0].split('<')) > 1 and line.split()[0].split('<')[1].split('>')[0] == 'min_control':
+            new_lines[l] = '\t\t\t\t\t<min_control>'+str(min_acti[ind])+'</min_control>\n'
+        if mod and len(line.split()[0].split('<')) > 1 and line.split()[0].split('<')[1].split('>')[0] == 'minimum_activation':
+            new_lines[l] = '\t\t\t\t\t<minimum_activation>' + str(min_acti[ind]) + '</minimum_activation>\n'
+            mod = False
     with open(osim_file, 'w') as file:
         file.writelines(new_lines)
     return osim_file

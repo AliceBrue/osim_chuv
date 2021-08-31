@@ -92,6 +92,79 @@ class OsimModel(object):
         self.model.addController(self.brain)
         self.model_state = self.model.initSystem()
 
+
+    def __init__(self, model_path, step_size, integrator_accuracy, body_ext_force, alex_torques, visualize, save_kin):
+        self.integrator_accuracy = integrator_accuracy
+        self.model = opensim.Model(model_path)
+        self.save_kin = save_kin
+        if save_kin is not None:
+            self.body_kinematics = opensim.BodyKinematics()
+            self.body_kinematics.setModel(self.model)
+            self.model.addAnalysis(self.body_kinematics)
+            self.reported_forces = opensim.ForceReporter()
+            self.reported_forces.setModel(self.model)
+            self.model.addAnalysis(self.reported_forces)
+            self.joint_reaction = opensim.JointReaction()
+            self.model.finalizeConnections()
+            self.joint_reaction.setModel(self.model)
+            # self.joint_reaction.setJointNames(['shoulder1'])
+            self.model.addAnalysis(self.joint_reaction)
+        self.model_state = self.model.initSystem()
+        self.model.setUseVisualizer(visualize)
+        self.brain = opensim.PrescribedController()
+        self.istep = 0
+        self.step_size = step_size
+        self.step_alive = 0
+
+        # get model sets
+        self.actuator_set = self.model.getActuators()
+        self.force_set = self.model.getForceSet()
+        self.body_set = self.model.getBodySet()
+        self.coordinate_set = self.model.getCoordinateSet()
+        self.marker_set = self.model.getMarkerSet()
+
+        # define controller
+        self.action_min = []
+        self.action_max = []
+        for j in range(self.actuator_set.getSize()):
+            func = opensim.Constant(0.0)
+            actuator = self.actuator_set.get(j)
+            self.brain.addActuator(actuator)
+            self.brain.prescribeControlForActuator(actuator.getName(), func)
+            scalar_actuator = opensim.ScalarActuator_safeDownCast(actuator)
+            if scalar_actuator is None:
+                # currently only BodyActuator is not handled (not crucial)
+                # https://simtk.org/api_docs/opensim/api_docs/classOpenSim_1_1Actuator.html
+                raise RuntimeError('un-handled type of scalar actuator')
+            else:
+                self.action_min.append(scalar_actuator.getMinControl())
+                self.action_max.append(scalar_actuator.getMaxControl())
+
+        # add potential external force
+        if body_ext_force is not None:
+            prescribed_force = opensim.PrescribedForce("perturbation", self.body_set.get(body_ext_force))
+            prescribed_force.setPointFunctions(opensim.Constant(0), opensim.Constant(0), opensim.Constant(0))
+            prescribed_force.setForceFunctions(opensim.Constant(0), opensim.Constant(0), opensim.Constant(0))
+            self.model.addForce(prescribed_force)
+
+        # add Alex torque
+        if alex_torques is not None:
+            for j in alex_torques:
+                if j in ['shoulder_elev', 'shoulder_add', 'shoulder_rot']:
+                    body = "humerus"
+                elif j == 'elbow_flexion':
+                    body = "radius"
+                prescribed_torque = opensim.PrescribedForce("Alex_" + j, self.body_set.get(body))
+                prescribed_torque.setTorqueFunctions(opensim.Constant(0), opensim.Constant(0), opensim.Constant(0))
+                prescribed_torque.setPointFunctions(opensim.Constant(0), opensim.Constant(0), opensim.Constant(0))
+                prescribed_torque.set_pointIsGlobal(False)
+                self.model.addForce(prescribed_torque)
+
+        self.action_space_size = self.actuator_set.getSize()
+        self.model.addController(self.brain)
+        self.model_state = self.model.initSystem()
+
+
     def actuate(self, action):
         if np.any(np.isnan(action)):
             raise ValueError('NaN passed in the activation vector. ')

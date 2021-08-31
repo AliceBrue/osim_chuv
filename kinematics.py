@@ -2,7 +2,7 @@ import numpy as np
 import xlrd
 import matplotlib.pyplot as plt
 import os
-from control_SO import *
+from emg_control import emg_data
 
 
 def main():
@@ -575,6 +575,39 @@ def comp_cmc_emg(cmc_states_file, emg_folder, ti, tf, delay_video, disabled_musc
                 plt.plot(emg_periods[cmc_muscles[i]][0], emg_periods[cmc_muscles[i]][1] + (i - p * n_emg) * emg_step,
                          '--', color=colors[i - p * n_emg], label='ref ' + cmc_muscles[i])
             plt.legend()
+
+
+def alex_kin(alex_file, ti=0, unit='sec',
+             ref={'R_ang_pos_5': 'shoulder_elev', 'R_ang_pos_1': 'shoulder_add', 'R_ang_pos_2': 'shoulder_rot',
+                  'R_ang_pos_6': 'elbow_flexion', 'R_pressure': 'pression'}, plot=False):
+
+    if unit == 'min':
+        ti = ti // 1 * 60 + ti % 1 * 100
+
+    with open(alex_file, 'r') as f1:
+        lines = f1.readlines()
+        values = np.zeros((len(lines) - 2, len(ref)))
+        time = np.zeros(len(lines) - 2)
+        joints = lines[0].split(',')
+        for r in range(2, len(lines)):
+            for j in range(len(joints)):
+                if joints[j] in list(ref.keys()):
+                    time[r - 2] = float(lines[r].split(',')[3])
+                    if list(ref.values())[list(ref.keys()).index(joints[j])] == 'elbow_flexion':
+                        values[r - 2, list(ref.keys()).index(joints[j])] = 90 + float(
+                            lines[r].split(',')[j]) * 180 / 3.14
+                    else:
+                        values[r - 2, list(ref.keys()).index(joints[j])] = float(
+                            lines[r].split(',')[j]) * 180 / 3.14
+
+    if plot:
+        plt.figure()
+        for j in range(len(ref)):
+            plt.plot(time[time > ti] - time[time > ti][0], values[time > ti, j], label=list(ref.values())[j])
+        plt.legend()
+        plt.xlabel('time [s]')
+
+    return values[time > ti, :], time[time > ti] - time[time > ti][0], ref
 
 
 if __name__ == '__main__':
