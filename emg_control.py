@@ -25,7 +25,7 @@ def main():
         osim_file = modify_Millard(osim_file, ignore_tendon='true', fiber_damping=0.001, ignore_dyn='true')
                                    # ignore_dyn to 'true' to provide EMG data as muscle activation
         osim_file = lock_Coord(osim_file, ['shoulder_rot', 'elv_angle'], 'false')
-        # Manual init joint angles  ## TO DO init from pifpaf file
+        # Manual init joint angles  ## TO DO init from pifpaf file"
         osim_file = modify_default_Coord(osim_file, 'elv_angle', 1.2)
         osim_file = modify_default_Coord(osim_file, 'r_shoulder_elev', 0.14)
         osim_file = modify_default_Coord(osim_file, 'shoulder_rot', 0.16)
