@@ -3836,7 +3836,7 @@
 					<coordinates>
 						<Coordinate name="elv_angle">
 							<!--The value of this coordinate before any value has been set. Rotational coordinate value is in radians and Translational in meters.-->
-                            <default_value>1.5</default_value>
+							<default_value>1.3</default_value>
 							<!--The speed value of this coordinate before any value has been set. Rotational coordinate value is in rad/s and Translational in m/s.-->
 							<default_speed_value>0</default_speed_value>
 							<!--The minimum and maximum values that the coordinate can range between. Rotational coordinate range in radians and Translational in meters.-->
@@ -3844,7 +3844,7 @@
 							<!--Flag indicating whether or not the values of the coordinates should be limited to the range, above.-->
 							<clamped>true</clamped>
 							<!--Flag indicating whether or not the values of the coordinates should be constrained to the current (e.g. default) value, above.-->
-                            <locked>false</locked>
+							<locked>true</locked>
 							<!--If specified, the coordinate can be prescribed by a function of time. It can be any OpenSim Function with valid second order derivatives.-->
 							<prescribed_function />
 							<!--Flag indicating whether or not the values of the coordinates should be prescribed according to the function above. It is ignored if the no prescribed function is specified.-->
@@ -3959,7 +3959,7 @@
 					<coordinates>
 						<Coordinate name="shoulder_elev">
 							<!--The value of this coordinate before any value has been set. Rotational coordinate value is in radians and Translational in meters.-->
-                            <default_value>0</default_value>
+							<default_value>0.15</default_value>
 							<!--The speed value of this coordinate before any value has been set. Rotational coordinate value is in rad/s and Translational in m/s.-->
 							<default_speed_value>0</default_speed_value>
 							<!--The minimum and maximum values that the coordinate can range between. Rotational coordinate range in radians and Translational in meters.-->
@@ -3967,7 +3967,7 @@
 							<!--Flag indicating whether or not the values of the coordinates should be limited to the range, above.-->
 							<clamped>true</clamped>
 							<!--Flag indicating whether or not the values of the coordinates should be constrained to the current (e.g. default) value, above.-->
-                            <locked>false</locked>
+							<locked>true</locked>
 							<!--If specified, the coordinate can be prescribed by a function of time. It can be any OpenSim Function with valid second order derivatives.-->
 							<prescribed_function />
 							<!--Flag indicating whether or not the values of the coordinates should be prescribed according to the function above. It is ignored if the no prescribed function is specified.-->
@@ -4098,7 +4098,7 @@
 					<coordinates>
 						<Coordinate name="shoulder_rot">
 							<!--The value of this coordinate before any value has been set. Rotational coordinate value is in radians and Translational in meters.-->
-                            <default_value>0.09</default_value>
+							<default_value>0</default_value>
 							<!--The speed value of this coordinate before any value has been set. Rotational coordinate value is in rad/s and Translational in m/s.-->
 							<default_speed_value>0</default_speed_value>
 							<!--The minimum and maximum values that the coordinate can range between. Rotational coordinate range in radians and Translational in meters.-->
@@ -4106,7 +4106,7 @@
 							<!--Flag indicating whether or not the values of the coordinates should be limited to the range, above.-->
 							<clamped>true</clamped>
 							<!--Flag indicating whether or not the values of the coordinates should be constrained to the current (e.g. default) value, above.-->
-                            <locked>false</locked>
+							<locked>true</locked>
 							<!--If specified, the coordinate can be prescribed by a function of time. It can be any OpenSim Function with valid second order derivatives.-->
 							<prescribed_function />
 							<!--Flag indicating whether or not the values of the coordinates should be prescribed according to the function above. It is ignored if the no prescribed function is specified.-->
@@ -4221,7 +4221,7 @@
 					<coordinates>
 						<Coordinate name="elbow_flexion">
 							<!--The value of this coordinate before any value has been set. Rotational coordinate value is in radians and Translational in meters.-->
-                            <default_value>1.6</default_value>
+							<default_value>1.5</default_value>
 							<!--The speed value of this coordinate before any value has been set. Rotational coordinate value is in rad/s and Translational in m/s.-->
 							<default_speed_value>0</default_speed_value>
 							<!--The minimum and maximum values that the coordinate can range between. Rotational coordinate range in radians and Translational in meters.-->
@@ -4229,7 +4229,7 @@
 							<!--Flag indicating whether or not the values of the coordinates should be limited to the range, above.-->
 							<clamped>true</clamped>
 							<!--Flag indicating whether or not the values of the coordinates should be constrained to the current (e.g. default) value, above.-->
-							<locked>false</locked>
+							<locked>true</locked>
 							<!--If specified, the coordinate can be prescribed by a function of time. It can be any OpenSim Function with valid second order derivatives.-->
 							<prescribed_function />
 							<!--Flag indicating whether or not the values of the coordinates should be prescribed according to the function above. It is ignored if the no prescribed function is specified.-->
@@ -5037,13 +5037,13 @@
 					<!--The upper limit of the coordinate range of motion (rotations in degrees).-->
 					<upper_limit>190</upper_limit>
 					<!--Stiffness of the passive limit force when coordinate exceeds lower limit. Note, rotational stiffness expected in N*m/degree.-->
-					<lower_stiffness>1e-08</lower_stiffness>
+					<lower_stiffness>1</lower_stiffness>
 					<!--The lower limit of the coordinate range of motion (rotations in degrees).-->
-					<lower_limit>190</lower_limit>
+					<lower_limit>90</lower_limit>
 					<!--Damping factor on the coordinate's speed applied only when limit is exceeded. For translational has units N/(m/s) and rotational has Nm/(degree/s)-->
 					<damping>0.001745</damping>
 					<!--Transition region width in the units of the coordinate (rotations in degrees). Dictates the transition from zero to constant stiffness as coordinate exceeds its limit.-->
-					<transition>1</transition>
+					<transition>50</transition>
 				</CoordinateLimitForce>
 				<CoordinateLimitForce name="pro_sup_ligaments">
 					<!--Flag indicating whether the force is applied or not. If true the forceis applied to the MultibodySystem otherwise the force is not applied.NOTE: Prior to OpenSim 4.0, this behavior was controlled by the 'isDisabled' property, where 'true' meant that force was not being applied. Thus, if 'isDisabled' is true, then 'appliesForce` is false.-->
@@ -5131,11 +5131,11 @@
 					<!--Maximum contraction velocity of the fibers, in optimal fiberlengths/second-->
 					<max_contraction_velocity>10</max_contraction_velocity>
 					<!--Compute muscle dynamics ignoring tendon compliance. Tendon is assumed to be rigid.-->
-                    <ignore_tendon_compliance>true</ignore_tendon_compliance>
+					<ignore_tendon_compliance>true</ignore_tendon_compliance>
 					<!--Compute muscle dynamics ignoring activation dynamics. Activation is equivalent to excitation.-->
-                    <ignore_activation_dynamics>true</ignore_activation_dynamics>
+					<ignore_activation_dynamics>true</ignore_activation_dynamics>
 					<!--The linear damping of the fiber.-->
-                    <fiber_damping>0.001</fiber_damping>
+					<fiber_damping>0.001</fiber_damping>
 					<!--Activation lower bound.-->
 					<minimum_activation>0.01</minimum_activation>
 					<!--Active-force-length curve.-->
@@ -5224,11 +5224,11 @@
 					<!--Maximum contraction velocity of the fibers, in optimal fiberlengths/second-->
 					<max_contraction_velocity>10</max_contraction_velocity>
 					<!--Compute muscle dynamics ignoring tendon compliance. Tendon is assumed to be rigid.-->
-                    <ignore_tendon_compliance>true</ignore_tendon_compliance>
+					<ignore_tendon_compliance>true</ignore_tendon_compliance>
 					<!--Compute muscle dynamics ignoring activation dynamics. Activation is equivalent to excitation.-->
-                    <ignore_activation_dynamics>true</ignore_activation_dynamics>
+					<ignore_activation_dynamics>true</ignore_activation_dynamics>
 					<!--The linear damping of the fiber.-->
-                    <fiber_damping>0.001</fiber_damping>
+					<fiber_damping>0.001</fiber_damping>
 					<!--Activation lower bound.-->
 					<minimum_activation>0.01</minimum_activation>
 					<!--Active-force-length curve.-->
@@ -5310,11 +5310,11 @@
 					<!--Maximum contraction velocity of the fibers, in optimal fiberlengths/second-->
 					<max_contraction_velocity>10</max_contraction_velocity>
 					<!--Compute muscle dynamics ignoring tendon compliance. Tendon is assumed to be rigid.-->
-                    <ignore_tendon_compliance>true</ignore_tendon_compliance>
+					<ignore_tendon_compliance>true</ignore_tendon_compliance>
 					<!--Compute muscle dynamics ignoring activation dynamics. Activation is equivalent to excitation.-->
-                    <ignore_activation_dynamics>true</ignore_activation_dynamics>
+					<ignore_activation_dynamics>true</ignore_activation_dynamics>
 					<!--The linear damping of the fiber.-->
-                    <fiber_damping>0.001</fiber_damping>
+					<fiber_damping>0.001</fiber_damping>
 					<!--Activation lower bound.-->
 					<minimum_activation>0.01</minimum_activation>
 					<!--Active-force-length curve.-->
@@ -5417,11 +5417,11 @@
 					<!--Maximum contraction velocity of the fibers, in optimal fiberlengths/second-->
 					<max_contraction_velocity>10</max_contraction_velocity>
 					<!--Compute muscle dynamics ignoring tendon compliance. Tendon is assumed to be rigid.-->
-                    <ignore_tendon_compliance>true</ignore_tendon_compliance>
+					<ignore_tendon_compliance>true</ignore_tendon_compliance>
 					<!--Compute muscle dynamics ignoring activation dynamics. Activation is equivalent to excitation.-->
-                    <ignore_activation_dynamics>true</ignore_activation_dynamics>
+					<ignore_activation_dynamics>true</ignore_activation_dynamics>
 					<!--The linear damping of the fiber.-->
-                    <fiber_damping>0.001</fiber_damping>
+					<fiber_damping>0.001</fiber_damping>
 					<!--Activation lower bound.-->
 					<minimum_activation>0.01</minimum_activation>
 					<!--Active-force-length curve.-->
@@ -5565,11 +5565,11 @@
 					<!--Maximum contraction velocity of the fibers, in optimal fiberlengths/second-->
 					<max_contraction_velocity>10</max_contraction_velocity>
 					<!--Compute muscle dynamics ignoring tendon compliance. Tendon is assumed to be rigid.-->
-                    <ignore_tendon_compliance>true</ignore_tendon_compliance>
+					<ignore_tendon_compliance>true</ignore_tendon_compliance>
 					<!--Compute muscle dynamics ignoring activation dynamics. Activation is equivalent to excitation.-->
-                    <ignore_activation_dynamics>true</ignore_activation_dynamics>
+					<ignore_activation_dynamics>true</ignore_activation_dynamics>
 					<!--The linear damping of the fiber.-->
-                    <fiber_damping>0.001</fiber_damping>
+					<fiber_damping>0.001</fiber_damping>
 					<!--Activation lower bound.-->
 					<minimum_activation>0.01</minimum_activation>
 					<!--Active-force-length curve.-->
@@ -5682,11 +5682,11 @@
 					<!--Maximum contraction velocity of the fibers, in optimal fiberlengths/second-->
 					<max_contraction_velocity>10</max_contraction_velocity>
 					<!--Compute muscle dynamics ignoring tendon compliance. Tendon is assumed to be rigid.-->
-                    <ignore_tendon_compliance>true</ignore_tendon_compliance>
+					<ignore_tendon_compliance>true</ignore_tendon_compliance>
 					<!--Compute muscle dynamics ignoring activation dynamics. Activation is equivalent to excitation.-->
-                    <ignore_activation_dynamics>true</ignore_activation_dynamics>
+					<ignore_activation_dynamics>true</ignore_activation_dynamics>
 					<!--The linear damping of the fiber.-->
-                    <fiber_damping>0.001</fiber_damping>
+					<fiber_damping>0.001</fiber_damping>
 					<!--Activation lower bound.-->
 					<minimum_activation>0.01</minimum_activation>
 					<!--Active-force-length curve.-->
@@ -5783,11 +5783,11 @@
 					<!--Maximum contraction velocity of the fibers, in optimal fiberlengths/second-->
 					<max_contraction_velocity>10</max_contraction_velocity>
 					<!--Compute muscle dynamics ignoring tendon compliance. Tendon is assumed to be rigid.-->
-                    <ignore_tendon_compliance>true</ignore_tendon_compliance>
+					<ignore_tendon_compliance>true</ignore_tendon_compliance>
 					<!--Compute muscle dynamics ignoring activation dynamics. Activation is equivalent to excitation.-->
-                    <ignore_activation_dynamics>true</ignore_activation_dynamics>
+					<ignore_activation_dynamics>true</ignore_activation_dynamics>
 					<!--The linear damping of the fiber.-->
-                    <fiber_damping>0.001</fiber_damping>
+					<fiber_damping>0.001</fiber_damping>
 					<!--Activation lower bound.-->
 					<minimum_activation>0.01</minimum_activation>
 					<!--Active-force-length curve.-->
@@ -5886,11 +5886,11 @@
 					<!--Maximum contraction velocity of the fibers, in optimal fiberlengths/second-->
 					<max_contraction_velocity>10</max_contraction_velocity>
 					<!--Compute muscle dynamics ignoring tendon compliance. Tendon is assumed to be rigid.-->
-                    <ignore_tendon_compliance>true</ignore_tendon_compliance>
+					<ignore_tendon_compliance>true</ignore_tendon_compliance>
 					<!--Compute muscle dynamics ignoring activation dynamics. Activation is equivalent to excitation.-->
-                    <ignore_activation_dynamics>true</ignore_activation_dynamics>
+					<ignore_activation_dynamics>true</ignore_activation_dynamics>
 					<!--The linear damping of the fiber.-->
-                    <fiber_damping>0.001</fiber_damping>
+					<fiber_damping>0.001</fiber_damping>
 					<!--Activation lower bound.-->
 					<minimum_activation>0.01</minimum_activation>
 					<!--Active-force-length curve.-->
@@ -5987,11 +5987,11 @@
 					<!--Maximum contraction velocity of the fibers, in optimal fiberlengths/second-->
 					<max_contraction_velocity>10</max_contraction_velocity>
 					<!--Compute muscle dynamics ignoring tendon compliance. Tendon is assumed to be rigid.-->
-                    <ignore_tendon_compliance>true</ignore_tendon_compliance>
+					<ignore_tendon_compliance>true</ignore_tendon_compliance>
 					<!--Compute muscle dynamics ignoring activation dynamics. Activation is equivalent to excitation.-->
-                    <ignore_activation_dynamics>true</ignore_activation_dynamics>
+					<ignore_activation_dynamics>true</ignore_activation_dynamics>
 					<!--The linear damping of the fiber.-->
-                    <fiber_damping>0.001</fiber_damping>
+					<fiber_damping>0.001</fiber_damping>
 					<!--Activation lower bound.-->
 					<minimum_activation>0.01</minimum_activation>
 					<!--Active-force-length curve.-->
@@ -6104,11 +6104,11 @@
 					<!--Maximum contraction velocity of the fibers, in optimal fiberlengths/second-->
 					<max_contraction_velocity>10</max_contraction_velocity>
 					<!--Compute muscle dynamics ignoring tendon compliance. Tendon is assumed to be rigid.-->
-                    <ignore_tendon_compliance>true</ignore_tendon_compliance>
+					<ignore_tendon_compliance>true</ignore_tendon_compliance>
 					<!--Compute muscle dynamics ignoring activation dynamics. Activation is equivalent to excitation.-->
-                    <ignore_activation_dynamics>true</ignore_activation_dynamics>
+					<ignore_activation_dynamics>true</ignore_activation_dynamics>
 					<!--The linear damping of the fiber.-->
-                    <fiber_damping>0.001</fiber_damping>
+					<fiber_damping>0.001</fiber_damping>
 					<!--Activation lower bound.-->
 					<minimum_activation>0.01</minimum_activation>
 					<!--Active-force-length curve.-->
@@ -6221,11 +6221,11 @@
 					<!--Maximum contraction velocity of the fibers, in optimal fiberlengths/second-->
 					<max_contraction_velocity>10</max_contraction_velocity>
 					<!--Compute muscle dynamics ignoring tendon compliance. Tendon is assumed to be rigid.-->
-                    <ignore_tendon_compliance>true</ignore_tendon_compliance>
+					<ignore_tendon_compliance>true</ignore_tendon_compliance>
 					<!--Compute muscle dynamics ignoring activation dynamics. Activation is equivalent to excitation.-->
-                    <ignore_activation_dynamics>true</ignore_activation_dynamics>
+					<ignore_activation_dynamics>true</ignore_activation_dynamics>
 					<!--The linear damping of the fiber.-->
-                    <fiber_damping>0.001</fiber_damping>
+					<fiber_damping>0.001</fiber_damping>
 					<!--Activation lower bound.-->
 					<minimum_activation>0.01</minimum_activation>
 					<!--Active-force-length curve.-->
@@ -6386,11 +6386,11 @@
 					<!--Maximum contraction velocity of the fibers, in optimal fiberlengths/second-->
 					<max_contraction_velocity>10</max_contraction_velocity>
 					<!--Compute muscle dynamics ignoring tendon compliance. Tendon is assumed to be rigid.-->
-                    <ignore_tendon_compliance>true</ignore_tendon_compliance>
+					<ignore_tendon_compliance>true</ignore_tendon_compliance>
 					<!--Compute muscle dynamics ignoring activation dynamics. Activation is equivalent to excitation.-->
-                    <ignore_activation_dynamics>true</ignore_activation_dynamics>
+					<ignore_activation_dynamics>true</ignore_activation_dynamics>
 					<!--The linear damping of the fiber.-->
-                    <fiber_damping>0.001</fiber_damping>
+					<fiber_damping>0.001</fiber_damping>
 					<!--Activation lower bound.-->
 					<minimum_activation>0.01</minimum_activation>
 					<!--Active-force-length curve.-->
@@ -6565,11 +6565,11 @@
 					<!--Maximum contraction velocity of the fibers, in optimal fiberlengths/second-->
 					<max_contraction_velocity>10</max_contraction_velocity>
 					<!--Compute muscle dynamics ignoring tendon compliance. Tendon is assumed to be rigid.-->
-                    <ignore_tendon_compliance>true</ignore_tendon_compliance>
+					<ignore_tendon_compliance>true</ignore_tendon_compliance>
 					<!--Compute muscle dynamics ignoring activation dynamics. Activation is equivalent to excitation.-->
-                    <ignore_activation_dynamics>true</ignore_activation_dynamics>
+					<ignore_activation_dynamics>true</ignore_activation_dynamics>
 					<!--The linear damping of the fiber.-->
-                    <fiber_damping>0.001</fiber_damping>
+					<fiber_damping>0.001</fiber_damping>
 					<!--Activation lower bound.-->
 					<minimum_activation>0.01</minimum_activation>
 					<!--Active-force-length curve.-->
@@ -6736,11 +6736,11 @@
 					<!--Maximum contraction velocity of the fibers, in optimal fiberlengths/second-->
 					<max_contraction_velocity>10</max_contraction_velocity>
 					<!--Compute muscle dynamics ignoring tendon compliance. Tendon is assumed to be rigid.-->
-                    <ignore_tendon_compliance>true</ignore_tendon_compliance>
+					<ignore_tendon_compliance>true</ignore_tendon_compliance>
 					<!--Compute muscle dynamics ignoring activation dynamics. Activation is equivalent to excitation.-->
-                    <ignore_activation_dynamics>true</ignore_activation_dynamics>
+					<ignore_activation_dynamics>true</ignore_activation_dynamics>
 					<!--The linear damping of the fiber.-->
-                    <fiber_damping>0.001</fiber_damping>
+					<fiber_damping>0.001</fiber_damping>
 					<!--Activation lower bound.-->
 					<minimum_activation>0.01</minimum_activation>
 					<!--Active-force-length curve.-->
@@ -6845,11 +6845,11 @@
 					<!--Maximum contraction velocity of the fibers, in optimal fiberlengths/second-->
 					<max_contraction_velocity>10</max_contraction_velocity>
 					<!--Compute muscle dynamics ignoring tendon compliance. Tendon is assumed to be rigid.-->
-                    <ignore_tendon_compliance>true</ignore_tendon_compliance>
+					<ignore_tendon_compliance>true</ignore_tendon_compliance>
 					<!--Compute muscle dynamics ignoring activation dynamics. Activation is equivalent to excitation.-->
-                    <ignore_activation_dynamics>true</ignore_activation_dynamics>
+					<ignore_activation_dynamics>true</ignore_activation_dynamics>
 					<!--The linear damping of the fiber.-->
-                    <fiber_damping>0.001</fiber_damping>
+					<fiber_damping>0.001</fiber_damping>
 					<!--Activation lower bound.-->
 					<minimum_activation>0.01</minimum_activation>
 					<!--Active-force-length curve.-->
@@ -6966,11 +6966,11 @@
 					<!--Maximum contraction velocity of the fibers, in optimal fiberlengths/second-->
 					<max_contraction_velocity>10</max_contraction_velocity>
 					<!--Compute muscle dynamics ignoring tendon compliance. Tendon is assumed to be rigid.-->
-                    <ignore_tendon_compliance>true</ignore_tendon_compliance>
+					<ignore_tendon_compliance>true</ignore_tendon_compliance>
 					<!--Compute muscle dynamics ignoring activation dynamics. Activation is equivalent to excitation.-->
-                    <ignore_activation_dynamics>true</ignore_activation_dynamics>
+					<ignore_activation_dynamics>true</ignore_activation_dynamics>
 					<!--The linear damping of the fiber.-->
-                    <fiber_damping>0.001</fiber_damping>
+					<fiber_damping>0.001</fiber_damping>
 					<!--Activation lower bound.-->
 					<minimum_activation>0.01</minimum_activation>
 					<!--Active-force-length curve.-->
@@ -7079,11 +7079,11 @@
 					<!--Maximum contraction velocity of the fibers, in optimal fiberlengths/second-->
 					<max_contraction_velocity>10</max_contraction_velocity>
 					<!--Compute muscle dynamics ignoring tendon compliance. Tendon is assumed to be rigid.-->
-                    <ignore_tendon_compliance>true</ignore_tendon_compliance>
+					<ignore_tendon_compliance>true</ignore_tendon_compliance>
 					<!--Compute muscle dynamics ignoring activation dynamics. Activation is equivalent to excitation.-->
-                    <ignore_activation_dynamics>true</ignore_activation_dynamics>
+					<ignore_activation_dynamics>true</ignore_activation_dynamics>
 					<!--The linear damping of the fiber.-->
-                    <fiber_damping>0.001</fiber_damping>
+					<fiber_damping>0.001</fiber_damping>
 					<!--Activation lower bound.-->
 					<minimum_activation>0.01</minimum_activation>
 					<!--Active-force-length curve.-->
@@ -7192,11 +7192,11 @@
 					<!--Maximum contraction velocity of the fibers, in optimal fiberlengths/second-->
 					<max_contraction_velocity>10</max_contraction_velocity>
 					<!--Compute muscle dynamics ignoring tendon compliance. Tendon is assumed to be rigid.-->
-                    <ignore_tendon_compliance>true</ignore_tendon_compliance>
+					<ignore_tendon_compliance>true</ignore_tendon_compliance>
 					<!--Compute muscle dynamics ignoring activation dynamics. Activation is equivalent to excitation.-->
-                    <ignore_activation_dynamics>true</ignore_activation_dynamics>
+					<ignore_activation_dynamics>true</ignore_activation_dynamics>
 					<!--The linear damping of the fiber.-->
-                    <fiber_damping>0.001</fiber_damping>
+					<fiber_damping>0.001</fiber_damping>
 					<!--Activation lower bound.-->
 					<minimum_activation>0.01</minimum_activation>
 					<!--Active-force-length curve.-->
@@ -7368,11 +7368,11 @@
 					<!--Maximum contraction velocity of the fibers, in optimal fiberlengths/second-->
 					<max_contraction_velocity>10</max_contraction_velocity>
 					<!--Compute muscle dynamics ignoring tendon compliance. Tendon is assumed to be rigid.-->
-                    <ignore_tendon_compliance>true</ignore_tendon_compliance>
+					<ignore_tendon_compliance>true</ignore_tendon_compliance>
 					<!--Compute muscle dynamics ignoring activation dynamics. Activation is equivalent to excitation.-->
-                    <ignore_activation_dynamics>true</ignore_activation_dynamics>
+					<ignore_activation_dynamics>true</ignore_activation_dynamics>
 					<!--The linear damping of the fiber.-->
-                    <fiber_damping>0.001</fiber_damping>
+					<fiber_damping>0.001</fiber_damping>
 					<!--Activation lower bound.-->
 					<minimum_activation>0.01</minimum_activation>
 					<!--Active-force-length curve.-->
@@ -7518,11 +7518,11 @@
 					<!--Maximum contraction velocity of the fibers, in optimal fiberlengths/second-->
 					<max_contraction_velocity>10</max_contraction_velocity>
 					<!--Compute muscle dynamics ignoring tendon compliance. Tendon is assumed to be rigid.-->
-                    <ignore_tendon_compliance>true</ignore_tendon_compliance>
+					<ignore_tendon_compliance>true</ignore_tendon_compliance>
 					<!--Compute muscle dynamics ignoring activation dynamics. Activation is equivalent to excitation.-->
-                    <ignore_activation_dynamics>true</ignore_activation_dynamics>
+					<ignore_activation_dynamics>true</ignore_activation_dynamics>
 					<!--The linear damping of the fiber.-->
-                    <fiber_damping>0.001</fiber_damping>
+					<fiber_damping>0.001</fiber_damping>
 					<!--Activation lower bound.-->
 					<minimum_activation>0.01</minimum_activation>
 					<!--Active-force-length curve.-->
@@ -7624,11 +7624,11 @@
 					<!--Maximum contraction velocity of the fibers, in optimal fiberlengths/second-->
 					<max_contraction_velocity>10</max_contraction_velocity>
 					<!--Compute muscle dynamics ignoring tendon compliance. Tendon is assumed to be rigid.-->
-                    <ignore_tendon_compliance>true</ignore_tendon_compliance>
+					<ignore_tendon_compliance>true</ignore_tendon_compliance>
 					<!--Compute muscle dynamics ignoring activation dynamics. Activation is equivalent to excitation.-->
-                    <ignore_activation_dynamics>true</ignore_activation_dynamics>
+					<ignore_activation_dynamics>true</ignore_activation_dynamics>
 					<!--The linear damping of the fiber.-->
-                    <fiber_damping>0.001</fiber_damping>
+					<fiber_damping>0.001</fiber_damping>
 					<!--Activation lower bound.-->
 					<minimum_activation>0.01</minimum_activation>
 					<!--Active-force-length curve.-->
@@ -7725,11 +7725,11 @@
 					<!--Maximum contraction velocity of the fibers, in optimal fiberlengths/second-->
 					<max_contraction_velocity>10</max_contraction_velocity>
 					<!--Compute muscle dynamics ignoring tendon compliance. Tendon is assumed to be rigid.-->
-                    <ignore_tendon_compliance>true</ignore_tendon_compliance>
+					<ignore_tendon_compliance>true</ignore_tendon_compliance>
 					<!--Compute muscle dynamics ignoring activation dynamics. Activation is equivalent to excitation.-->
-                    <ignore_activation_dynamics>true</ignore_activation_dynamics>
+					<ignore_activation_dynamics>true</ignore_activation_dynamics>
 					<!--The linear damping of the fiber.-->
-                    <fiber_damping>0.001</fiber_damping>
+					<fiber_damping>0.001</fiber_damping>
 					<!--Activation lower bound.-->
 					<minimum_activation>0.01</minimum_activation>
 					<!--Active-force-length curve.-->
@@ -7838,11 +7838,11 @@
 					<!--Maximum contraction velocity of the fibers, in optimal fiberlengths/second-->
 					<max_contraction_velocity>10</max_contraction_velocity>
 					<!--Compute muscle dynamics ignoring tendon compliance. Tendon is assumed to be rigid.-->
-                    <ignore_tendon_compliance>true</ignore_tendon_compliance>
+					<ignore_tendon_compliance>true</ignore_tendon_compliance>
 					<!--Compute muscle dynamics ignoring activation dynamics. Activation is equivalent to excitation.-->
-                    <ignore_activation_dynamics>true</ignore_activation_dynamics>
+					<ignore_activation_dynamics>true</ignore_activation_dynamics>
 					<!--The linear damping of the fiber.-->
-                    <fiber_damping>0.001</fiber_damping>
+					<fiber_damping>0.001</fiber_damping>
 					<!--Activation lower bound.-->
 					<minimum_activation>0.01</minimum_activation>
 					<!--Active-force-length curve.-->
@@ -7943,11 +7943,11 @@
 					<!--Maximum contraction velocity of the fibers, in optimal fiberlengths/second-->
 					<max_contraction_velocity>10</max_contraction_velocity>
 					<!--Compute muscle dynamics ignoring tendon compliance. Tendon is assumed to be rigid.-->
-                    <ignore_tendon_compliance>true</ignore_tendon_compliance>
+					<ignore_tendon_compliance>true</ignore_tendon_compliance>
 					<!--Compute muscle dynamics ignoring activation dynamics. Activation is equivalent to excitation.-->
-                    <ignore_activation_dynamics>true</ignore_activation_dynamics>
+					<ignore_activation_dynamics>true</ignore_activation_dynamics>
 					<!--The linear damping of the fiber.-->
-                    <fiber_damping>0.001</fiber_damping>
+					<fiber_damping>0.001</fiber_damping>
 					<!--Activation lower bound.-->
 					<minimum_activation>0.01</minimum_activation>
 					<!--Active-force-length curve.-->
@@ -8060,11 +8060,11 @@
 					<!--Maximum contraction velocity of the fibers, in optimal fiberlengths/second-->
 					<max_contraction_velocity>10</max_contraction_velocity>
 					<!--Compute muscle dynamics ignoring tendon compliance. Tendon is assumed to be rigid.-->
-                    <ignore_tendon_compliance>true</ignore_tendon_compliance>
+					<ignore_tendon_compliance>true</ignore_tendon_compliance>
 					<!--Compute muscle dynamics ignoring activation dynamics. Activation is equivalent to excitation.-->
-                    <ignore_activation_dynamics>true</ignore_activation_dynamics>
+					<ignore_activation_dynamics>true</ignore_activation_dynamics>
 					<!--The linear damping of the fiber.-->
-                    <fiber_damping>0.001</fiber_damping>
+					<fiber_damping>0.001</fiber_damping>
 					<!--Activation lower bound.-->
 					<minimum_activation>0.01</minimum_activation>
 					<!--Active-force-length curve.-->
@@ -8167,11 +8167,11 @@
 					<!--Maximum contraction velocity of the fibers, in optimal fiberlengths/second-->
 					<max_contraction_velocity>10</max_contraction_velocity>
 					<!--Compute muscle dynamics ignoring tendon compliance. Tendon is assumed to be rigid.-->
-                    <ignore_tendon_compliance>true</ignore_tendon_compliance>
+					<ignore_tendon_compliance>true</ignore_tendon_compliance>
 					<!--Compute muscle dynamics ignoring activation dynamics. Activation is equivalent to excitation.-->
-                    <ignore_activation_dynamics>true</ignore_activation_dynamics>
+					<ignore_activation_dynamics>true</ignore_activation_dynamics>
 					<!--The linear damping of the fiber.-->
-                    <fiber_damping>0.001</fiber_damping>
+					<fiber_damping>0.001</fiber_damping>
 					<!--Activation lower bound.-->
 					<minimum_activation>0.01</minimum_activation>
 					<!--Active-force-length curve.-->
@@ -8305,11 +8305,11 @@
 					<!--Maximum contraction velocity of the fibers, in optimal fiberlengths/second-->
 					<max_contraction_velocity>10</max_contraction_velocity>
 					<!--Compute muscle dynamics ignoring tendon compliance. Tendon is assumed to be rigid.-->
-                    <ignore_tendon_compliance>true</ignore_tendon_compliance>
+					<ignore_tendon_compliance>true</ignore_tendon_compliance>
 					<!--Compute muscle dynamics ignoring activation dynamics. Activation is equivalent to excitation.-->
-                    <ignore_activation_dynamics>true</ignore_activation_dynamics>
+					<ignore_activation_dynamics>true</ignore_activation_dynamics>
 					<!--The linear damping of the fiber.-->
-                    <fiber_damping>0.001</fiber_damping>
+					<fiber_damping>0.001</fiber_damping>
 					<!--Activation lower bound.-->
 					<minimum_activation>0.01</minimum_activation>
 					<!--Active-force-length curve.-->
@@ -8418,11 +8418,11 @@
 					<!--Maximum contraction velocity of the fibers, in optimal fiberlengths/second-->
 					<max_contraction_velocity>10</max_contraction_velocity>
 					<!--Compute muscle dynamics ignoring tendon compliance. Tendon is assumed to be rigid.-->
-                    <ignore_tendon_compliance>true</ignore_tendon_compliance>
+					<ignore_tendon_compliance>true</ignore_tendon_compliance>
 					<!--Compute muscle dynamics ignoring activation dynamics. Activation is equivalent to excitation.-->
-                    <ignore_activation_dynamics>true</ignore_activation_dynamics>
+					<ignore_activation_dynamics>true</ignore_activation_dynamics>
 					<!--The linear damping of the fiber.-->
-                    <fiber_damping>0.001</fiber_damping>
+					<fiber_damping>0.001</fiber_damping>
 					<!--Activation lower bound.-->
 					<minimum_activation>0.01</minimum_activation>
 					<!--Active-force-length curve.-->
@@ -8558,11 +8558,11 @@
 					<!--Maximum contraction velocity of the fibers, in optimal fiberlengths/second-->
 					<max_contraction_velocity>10</max_contraction_velocity>
 					<!--Compute muscle dynamics ignoring tendon compliance. Tendon is assumed to be rigid.-->
-                    <ignore_tendon_compliance>true</ignore_tendon_compliance>
+					<ignore_tendon_compliance>true</ignore_tendon_compliance>
 					<!--Compute muscle dynamics ignoring activation dynamics. Activation is equivalent to excitation.-->
-                    <ignore_activation_dynamics>true</ignore_activation_dynamics>
+					<ignore_activation_dynamics>true</ignore_activation_dynamics>
 					<!--The linear damping of the fiber.-->
-                    <fiber_damping>0.001</fiber_damping>
+					<fiber_damping>0.001</fiber_damping>
 					<!--Activation lower bound.-->
 					<minimum_activation>0.01</minimum_activation>
 					<!--Active-force-length curve.-->
@@ -8659,11 +8659,11 @@
 					<!--Maximum contraction velocity of the fibers, in optimal fiberlengths/second-->
 					<max_contraction_velocity>10</max_contraction_velocity>
 					<!--Compute muscle dynamics ignoring tendon compliance. Tendon is assumed to be rigid.-->
-                    <ignore_tendon_compliance>true</ignore_tendon_compliance>
+					<ignore_tendon_compliance>true</ignore_tendon_compliance>
 					<!--Compute muscle dynamics ignoring activation dynamics. Activation is equivalent to excitation.-->
-                    <ignore_activation_dynamics>true</ignore_activation_dynamics>
+					<ignore_activation_dynamics>true</ignore_activation_dynamics>
 					<!--The linear damping of the fiber.-->
-                    <fiber_damping>0.001</fiber_damping>
+					<fiber_damping>0.001</fiber_damping>
 					<!--Activation lower bound.-->
 					<minimum_activation>0.01</minimum_activation>
 					<!--Active-force-length curve.-->

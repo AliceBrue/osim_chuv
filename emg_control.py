@@ -7,6 +7,7 @@ import matplotlib.pyplot as plt
 import os
 from osim_model import *
 from kinematics import *
+import pandas as pd
 
 
 def main():
@@ -60,21 +61,22 @@ def main():
 
         # Patient
         id = 4
-        spas = False  # to model spastic muscles
+        session = 1
         recording = 'Run_number_95_Plot_and_Store_Rep_1.0_1056.mat'
         n_stim = 12
         alex_file = 'C:/Users/Acer/Desktop/Pour alice/NM00' + str(id) + '/ALEx20210303114202.csv'  # path or None
         alex_side = 'L'
 
-        osim_file = 'models/alex_marker_elbk.osim'
+        osim_file = 'models/alex_marker.osim'  # '_elbk.osim
         osim_file = modify_elbow_k(osim_file, k=1, min_angle=90, transition=50)   # default k=1e-08, min_angle=190, transtion=1
         osim_file = modify_Millard(osim_file, 'true', 0.001, 'true')  # ignore tendon comp, fiber damping, activation dynamics
         # Model spastic muscle
+        spas = False
         if spas:
             spas_muscles = ['BIClong']
             min_acti = [0.5]  # default 0.01
             osim_file = min_acti_Muscle(osim_file, spas_muscles, min_acti)
-        osim_file = lock_Coord(osim_file, ['shoulder_elev', 'elv_angle', 'shoulder_rot', 'elv_angle'], 'false')
+        osim_file = lock_Coord(osim_file, ['shoulder_elev', 'elv_angle', 'shoulder_rot', 'elbow_flexion'], 'true')
         step_size = 0.01
         integ_acc = 0.001
 
@@ -84,8 +86,18 @@ def main():
         muscle_file = 'C:/Users/Acer/Desktop/Pour alice/NM00' + str(id) + '/emg_name.txt'
         time_file = 'C:/Users/Acer/Desktop/Pour alice/NM00' + str(id) + '/Data/norm_max_emg/' + recording +\
                     '/stim_'+str(n_stim)+'/EMG_time.txt'
-        osim_muscle_names = ['FCR', 'FCU', 'ED', 'FDSM', 'BRA', 'BIClong', 'TRIlong', 'DELT1', 'DELT2', 'DELT3',
-                             'BRD', 'PECM1', 'INFSP', 'SUPSP', 'RH']
+        osim_muscle_names_004 = ['FCR', 'FCU', 'ED', 'FDSM', 'BRA', 'BIClong', 'TRIlong', 'DELT1', 'DELT2', 'DELT3',
+                                'BRD', 'PECM1', 'INFSP', 'SUPSP', 'RH']
+        osim_muscle_names_005_1 = ['THE', 'BRD', 'ECRL', 'FDSM', 'SUPSP', 'DELT2', 'DELT1', 'DELT3', 'INFSP', 'TRIlong',
+                                 'EDCM', 'TMAJ', 'PECM1', 'BICshort', 'FCU']
+        osim_muscle_names_005_2 = ['ECRL', 'BRD', 'FDSM', 'ED', 'DELT2', 'DELT1', 'DELT3', 'BIClong', 'TRIlong',
+                                 'PECM1', 'LevScap', 'FCU', 'sync']
+        if id == 4:
+            osim_muscle_names = osim_muscle_names_004
+        elif id == 5 and session == 1:
+            osim_muscle_names = osim_muscle_names_005_1
+        elif id == 5 and session == 2:
+            osim_muscle_names = osim_muscle_names_005_2
 
         ti = 0  # in sec
         tf = -1  # -1 to simulate entire stim period
@@ -95,31 +107,36 @@ def main():
 
         # Init joint angles from Alex
         if alex_file is not None:
-            alex_ref = {'R_ang_pos_5': 'shoulder_elev', 'R_ang_pos_1': 'shoulder_add', 'R_ang_pos_2': 'shoulder_rot',
-                        'R_ang_pos_6': 'elbow_flexion', 'R_pressure': 'pression'}
+            alex_ref = {alex_side+'_ang_pos_5': 'shoulder_elev', alex_side+'_ang_pos_1': 'shoulder_add',
+                        alex_side+'_ang_pos_2': 'shoulder_rot', alex_side+'_ang_pos_6': 'elbow_flexion',
+                        alex_side+'_pressure': 'pression'}
             alex_j_values, alex_time, alex_ref = alex_kin(alex_file, ti=ti, unit='sec', ref=alex_ref, plot=False)
             osim_file = init_from_alex(osim_file, alex_file, ti, alex_side)
         else:
             alex_j_values, alex_time, alex_ref = None, None, None
         # Manual init
-        #osim_file = modify_default_Coord(osim_file, 'shoulder_elev', 0.15)
-        #osim_file = modify_default_Coord(osim_file, 'elv_angle', 1.3)
-        #osim_file = modify_default_Coord(osim_file, 'shoulder_rot', 0)
-        #osim_file = modify_default_Coord(osim_file, 'elbow_flexion', 1.5)
+        osim_file = modify_default_Coord(osim_file, 'shoulder_elev', 0.15)
+        osim_file = modify_default_Coord(osim_file, 'elv_angle', 1.3)
+        osim_file = modify_default_Coord(osim_file, 'shoulder_rot', 0)
+        osim_file = modify_default_Coord(osim_file, 'elbow_flexion', 1.5)
 
         #: Plots
         coord_plot = ["shoulder_elev", "elbow_flexion", "elv_angle", 'shoulder_rot']
-        save_folder = 'C:/Users/Acer/Desktop/Pour alice/NM00' + str(id) + "/Results/" + \
-                      str(recording.split('_')[2])+'_'+str(95)+'/'
+        save_folder = 'C:/Users/Acer/Desktop/Pour alice/NM00' + str(id) + "/Results/" + "test/" #\
+                      #str(recording.split('_')[2])+'_'+str(n_stim)+'/'
 
         alex_torques = None  # ['shoulder_elev', 'elbow_flexion', 'shoulder_add', 'shoulder_rot']
         alex_values = None  # compensation level in [0, 1]
+        ref = {alex_side+'_Torque_3': 'shoulder_elev', alex_side+'_Torque_1': 'shoulder_add',
+               alex_side+'_Torque_2': 'shoulder_rot', alex_side+'_Torque_4': 'elbow_flexion'}
+        alex_t_values, alex_time, _ = alex_torque(alex_file, ti=ti, ref=ref, plot=False)  # to compare torques or None
+
         if alex_values is not None:
             save_folder = save_folder + 'T_' + str(alex_values) + '/'
         osim_alex_control(osim_file, step_size, n_steps, emg_period, emg_factor=1, integ_acc=integ_acc,
                           coord_plot=coord_plot, alex_torques=alex_torques, alex_values=alex_values,
-                          alex_j_values=alex_j_values, alex_time=alex_time, alex_ref=alex_ref, save_folder=save_folder,
-                          visualize=True, show_plot=True, save_kin=True)
+                          alex_j_values=alex_j_values, alex_time=alex_time, alex_ref=alex_ref, alex_t_values=alex_t_values,
+                          save_folder=save_folder, visualize=True, show_plot=True, save_kin=True)
 
 
 def osim_control(osim_file, step_size, n_steps, emg_period, integ_acc=0.0001,
@@ -236,15 +253,18 @@ def osim_control(osim_file, step_size, n_steps, emg_period, integ_acc=0.0001,
 
 
 def osim_alex_control(osim_file, step_size, n_steps, emg_period, emg_factor=1, integ_acc=0.0001, coord_plot=None, alex_j_values=None,
-                      alex_torques=None, alex_values=None, alex_time=None, alex_ref=None, save_folder="results/",
-                      visualize=False, show_plot=False, save_kin=False):
+                      alex_torques=None, alex_values=None, alex_time=None, alex_ref=None, alex_t_values=None,
+                      save_folder="results/", visualize=False, show_plot=False, save_kin=False):
     """ Integrate opensim model with muscle controls """
 
     if not os.path.isdir(save_folder):
         os.mkdir(save_folder)
 
+    moments = None
+    if alex_t_values is not None:
+        moments = coord_plot
     #: Osim model
-    model = OsimModel(osim_file, step_size, integ_acc, body_ext_force=None, alex_torques=alex_torques,
+    model = OsimModel(osim_file, step_size, integ_acc, body_ext_force=None, alex_torques=alex_torques, moments=moments,
                       visualize=visualize, save_kin=save_kin)
     n_muscles = model.model.getMuscles().getSize()
     muscle_names = [None]*n_muscles
@@ -270,6 +290,8 @@ def osim_alex_control(osim_file, step_size, n_steps, emg_period, emg_factor=1, i
     #: States to plot
     if coord_plot is not None:
         coord_states = np.zeros((len(coord_plot), 2, n_steps-1))
+    if alex_t_values is not None:
+        torque_states = np.zeros((len(coord_plot), n_steps - 1))
 
     # Markers
     sh = np.zeros((3, n_steps - 1))
@@ -315,10 +337,10 @@ def osim_alex_control(osim_file, step_size, n_steps, emg_period, emg_factor=1, i
                 for dir in range(3):
                     func = opensim.Constant.safeDownCast(torqueFunctionSet.get(dir))
                     func.setValue(-alex_values*sh_t[dir])
-                    torques[j-1, dir] = alex_values*sh_t[dir]
+                    torques[j-1, dir] = -alex_values*sh_t[dir]
                     elbfunc = opensim.Constant.safeDownCast(elbtorqueFunctionSet.get(dir))
                     elbfunc.setValue(-alex_values*elb_t[dir])
-                    torques[j - 1, 3+dir] = alex_values*elb_t[dir]
+                    torques[j - 1, 3+dir] = -alex_values*elb_t[dir]
 
         #: Integration musculoskeletal system
         model.integrate()
@@ -335,6 +357,9 @@ def osim_alex_control(osim_file, step_size, n_steps, emg_period, emg_factor=1, i
             for i in range(len(coord_plot)):
                 coord_states[i, 0, j-1] = res["coordinate_pos"][coord_plot[i]]
                 coord_states[i, 1, j-1] = res["coordinate_vel"][coord_plot[i]]
+        if alex_t_values is not None:
+            for i in range(len(coord_plot)):
+                torque_states[i, j-1] = res['coordinate_muscle_moment_arm'][coord_plot[i]]
 
     #: Coordinates plot
     time = np.arange(n_steps-1)*step_size
@@ -407,16 +432,58 @@ def osim_alex_control(osim_file, step_size, n_steps, emg_period, emg_factor=1, i
             for dir in range(3):
                 ax[0].plot(time, torques[:, dir], label=labels[dir])
                 ax[1].plot(time, torques[:, 3+dir], label=labels[dir])
+            ax[0].legend()
+            ax[1].legend()
             ax[0].set_title('Shoulder torques')
             ax[1].set_title('Elbow torques')
             plt.savefig(save_folder + "torques")
 
+    #: Save simulation states
+    model.save_simulation(save_folder)
+
+    # Torque comparison
+    if alex_t_values is not None:
+        plt.figure('comp torques')
+        n = min(2, len(coord_plot))
+        for i in range(n):
+            ax = plt.subplot(n, 1, i + 1)
+            ax.plot(time, torque_states[i], 'b', label=coord_plot[i] + " torque")
+            if coord_plot[i] == 'shoulder_elev':
+                if 'shoulder_add' in list(alex_ref.values()):
+                    ax.plot(alex_time[alex_time < tf], alex_t_values[alex_time < tf,
+                                                                     list(alex_ref.values()).index('shoulder_add')],
+                            '--', color='grey', label="shoulder add ref")
+            if coord_plot[i] in list(alex_ref.values()):
+                ax.plot(alex_time[alex_time < tf], alex_t_values[alex_time < tf,
+                                                                 list(alex_ref.values()).index(coord_plot[i])],
+                        '--b', label=coord_plot[i] + " ref")
+            ax.legend()
+            ax.set_ylabel("torque [Nm]", color='b')
+            ax.set_xlabel("time [s]")
+            plt.title(coord_plot[i])
+        plt.tight_layout()
+        plt.savefig(save_folder + "torque_plot")
+
+        if len(coord_states) > 2:
+            plt.figure("torque plot 2")
+            n = len(coord_states) - 2
+            for i in range(n):
+                ax = plt.subplot(n, 1, i + 1)
+                ax.plot(time, torque_states[2+i], 'b', label=coord_plot[2+i] + " torque")
+                if coord_plot[2+i] in list(alex_ref.values()):
+                    ax.plot(alex_time[alex_time < tf], alex_t_values[alex_time < tf,
+                                                                     list(alex_ref.values()).index(coord_plot[2+i])],
+                            '--b', label=coord_plot[2+i] + " ref")
+                ax.legend()
+                ax.set_ylabel("torque [Nm]", color='b')
+                ax.set_xlabel("time [s]")
+                plt.title(coord_plot[2+i])
+            plt.tight_layout()
+            plt.savefig(save_folder + "torque_plot_2")
+
     if show_plot:
         plt.show()
     plt.close('all')
-
-    #: Save forces
-    model.save_simulation(save_folder)
 
 
 def def_controls(emg_period, muscle_names, n_steps, step_size, plot=False):
@@ -573,9 +640,33 @@ def init_from_alex(osim_file, alex_file, ti, side, unit='sec'):
 
 def alex_transform_coord(sh_flex, sh_add, sh_rot):
 
-    sh_elv = sh_rot + np.arctan(np.cos(sh_flex)/np.cos(sh_add))
-    sh_elev = np.arccos(min(max(np.cos(sh_flex)/np.sin(sh_elv-sh_rot), -1), 1))
+    sh_elv = np.arctan(np.cos(sh_flex)/np.cos(sh_add))  # + sh_rot
+    sh_elev = np.arccos(min(max(np.cos(sh_flex)/np.sin(sh_elv), -1), 1))  # (sh_elv-sh_rot)
     return sh_elev, sh_elv, sh_rot
+
+
+def alex_torque(alex_file, ti=0,
+                ref={'R_Torque_3': 'shoulder_elev', 'R_Torque_1': 'shoulder_add', 'R_Torque_2': 'shoulder_rot',
+                     'R_Torque_4': 'elbow_flexion'}, plot=False):
+    with open(alex_file, 'r') as f1:
+        lines = f1.readlines()
+        values = np.zeros((len(lines) - 2, len(ref)))
+        time = np.zeros(len(lines) - 2)
+        joints = lines[0].split(',')
+        for r in range(2, len(lines)):
+            for j in range(len(joints)):
+                if joints[j] in list(ref.keys()):
+                    time[r - 2] = float(lines[r].split(',')[3])
+                    values[r - 2, list(ref.keys()).index(joints[j])] = float(lines[r].split(',')[j])
+
+    if plot:
+        plt.figure()
+        for j in range(len(ref)):
+            plt.plot(time[time > ti] - time[time > ti][0], values[time > ti, j], label=list(ref.values())[j])
+        plt.legend()
+        plt.xlabel('time [s]')
+
+    return values[time > ti, :], time[time > ti] - time[time > ti][0], ref
 
 
 if __name__ == '__main__':

@@ -50,6 +50,7 @@ class OsimModel(object):
             self.reported_forces = opensim.ForceReporter()
             self.reported_forces.setModel(self.model)
             self.model.addAnalysis(self.reported_forces)
+
         self.model_state = self.model.initSystem()
         self.model.setUseVisualizer(visualize)
         self.brain = opensim.PrescribedController()
@@ -93,10 +94,12 @@ class OsimModel(object):
         self.model_state = self.model.initSystem()
 
 
-    def __init__(self, model_path, step_size, integrator_accuracy, body_ext_force, alex_torques, visualize, save_kin):
+    def __init__(self, model_path, step_size, integrator_accuracy, body_ext_force, alex_torques, visualize, moments,
+                 save_kin):
         self.integrator_accuracy = integrator_accuracy
         self.model = opensim.Model(model_path)
         self.save_kin = save_kin
+        self.moments = moments
         if save_kin is not None:
             self.body_kinematics = opensim.BodyKinematics()
             self.body_kinematics.setModel(self.model)
@@ -104,11 +107,6 @@ class OsimModel(object):
             self.reported_forces = opensim.ForceReporter()
             self.reported_forces.setModel(self.model)
             self.model.addAnalysis(self.reported_forces)
-            self.joint_reaction = opensim.JointReaction()
-            self.model.finalizeConnections()
-            self.joint_reaction.setModel(self.model)
-            # self.joint_reaction.setJointNames(['shoulder1'])
-            self.model.addAnalysis(self.joint_reaction)
         self.model_state = self.model.initSystem()
         self.model.setUseVisualizer(visualize)
         self.brain = opensim.PrescribedController()
@@ -301,6 +299,24 @@ class OsimModel(object):
                 marker.getVelocityInGround(self.state)[i] for i in range(3)]
             obs['markers'][name]['acc'] = [
                 marker.getAccelerationInGround(self.state)[i] for i in range(3)]
+
+        # muscle moment arm for each coordinate
+        if self.moments is not None:
+            obs['coordinate_muscle_moment_arm'] = {}
+            for i in range(len(self.moments)):
+                coordinate = self.coordinate_set.get(self.moments[i])
+                name = coordinate.getName()
+                obs['coordinate_muscle_moment_arm'][name] = 0  # {}
+                if self.model.getMuscles().getSize() != 0:
+                    for i in range(self.model.getMuscles().getSize()):
+                        muscle = self.model.getMuscles().get(i)
+                        name_muscle = muscle.getName()
+                        force = self.model.getForceSet().get(name_muscle)
+                        #muscle_ = opensim.Thelen2003Muscle.safeDownCast(force)
+                        muscle_ = opensim.Millard2012EquilibriumMuscle.safeDownCast(force)
+                        coord = self.model.getCoordinateSet().get(name)
+                        force = obs['muscles'][name_muscle]['fiber_force']
+                        obs['coordinate_muscle_moment_arm'][name] += force*muscle_.computeMomentArm(self.state, coord)  # [name_muscle]
 
         return obs
 
