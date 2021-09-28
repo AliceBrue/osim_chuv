@@ -64,8 +64,9 @@ def main():
         session = 1
         recording = 'Run_number_95_Plot_and_Store_Rep_1.0_1056.mat'
         n_stim = 12
-        alex_file = 'C:/Users/Acer/Desktop/Pour alice/NM00' + str(id) + '/ALEx20210303114202.csv'  # path or None
+        alex_file = 'C:/Users/Acer/Desktop/Pour alice/NM00' + str(id) + '/Inputs/Alex/ALEx20210303105242.csv'  # path or None
         alex_side = 'L'
+        ti_alex = 201.5
 
         osim_file = 'models/alex_marker.osim'  # '_elbk.osim
         osim_file = modify_elbow_k(osim_file, k=1, min_angle=90, transition=50)   # default k=1e-08, min_angle=190, transtion=1
@@ -110,7 +111,7 @@ def main():
             alex_ref = {alex_side+'_ang_pos_5': 'shoulder_elev', alex_side+'_ang_pos_1': 'shoulder_add',
                         alex_side+'_ang_pos_2': 'shoulder_rot', alex_side+'_ang_pos_6': 'elbow_flexion',
                         alex_side+'_pressure': 'pression'}
-            alex_j_values, alex_time, alex_ref = alex_kin(alex_file, ti=ti, unit='sec', ref=alex_ref, plot=False)
+            alex_j_values, alex_time, alex_ref = alex_kin(alex_file, ti=ti_alex, unit='sec', ref=alex_ref, plot=False)
             osim_file = init_from_alex(osim_file, alex_file, ti, alex_side)
         else:
             alex_j_values, alex_time, alex_ref = None, None, None
@@ -122,14 +123,14 @@ def main():
 
         #: Plots
         coord_plot = ["shoulder_elev", "elbow_flexion", "elv_angle", 'shoulder_rot']
-        save_folder = 'C:/Users/Acer/Desktop/Pour alice/NM00' + str(id) + "/Results/" + "test/" #\
-                      #str(recording.split('_')[2])+'_'+str(n_stim)+'/'
+        save_folder = 'C:/Users/Acer/Desktop/Pour alice/NM00' + str(id) + "/Results/" + \
+                      str(recording.split('_')[2])+'_'+str(n_stim)+'/'
 
         alex_torques = None  # ['shoulder_elev', 'elbow_flexion', 'shoulder_add', 'shoulder_rot']
         alex_values = None  # compensation level in [0, 1]
         ref = {alex_side+'_Torque_3': 'shoulder_elev', alex_side+'_Torque_1': 'shoulder_add',
                alex_side+'_Torque_2': 'shoulder_rot', alex_side+'_Torque_4': 'elbow_flexion'}
-        alex_t_values, alex_time, _ = alex_torque(alex_file, ti=ti, ref=ref, plot=False)  # to compare torques or None
+        alex_t_values, alex_time, _ = alex_torque(alex_file, ti=ti_alex, ref=ref, plot=False)  # to compare torques or None
 
         if alex_values is not None:
             save_folder = save_folder + 'T_' + str(alex_values) + '/'
