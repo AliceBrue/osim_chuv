@@ -131,6 +131,8 @@ def main():
         ref = {alex_side+'_Torque_3': 'shoulder_elev', alex_side+'_Torque_1': 'shoulder_add',
                alex_side+'_Torque_2': 'shoulder_rot', alex_side+'_Torque_4': 'elbow_flexion'}
         alex_t_values, alex_time, _ = alex_torque(alex_file, ti=ti_alex, ref=ref, plot=False)  # to compare torques or None
+        bas_alex_t_values, _, _ = alex_torque(alex_file, ti=0, tf=10, ref=ref, plot=False)  # remove isometric torque baseline
+        alex_t_values = alex_t_values - np.mean(bas_alex_t_values, axis=0)
 
         if alex_values is not None:
             save_folder = save_folder + 'T_' + str(alex_values) + '/'
@@ -646,7 +648,7 @@ def alex_transform_coord(sh_flex, sh_add, sh_rot):
     return sh_elev, sh_elv, sh_rot
 
 
-def alex_torque(alex_file, ti=0,
+def alex_torque(alex_file, ti=0, tf=-1,
                 ref={'R_Torque_3': 'shoulder_elev', 'R_Torque_1': 'shoulder_add', 'R_Torque_2': 'shoulder_rot',
                      'R_Torque_4': 'elbow_flexion'}, plot=False):
     with open(alex_file, 'r') as f1:
@@ -667,7 +669,12 @@ def alex_torque(alex_file, ti=0,
         plt.legend()
         plt.xlabel('time [s]')
 
-    return values[time > ti, :], time[time > ti] - time[time > ti][0], ref
+    values = values[time > ti, :]
+    time = time[time > ti] - time[time > ti][0]
+    if tf == -1:
+        return values, time, ref
+    else:
+        return values[time < tf, :], time[time < tf], ref
 
 
 if __name__ == '__main__':
