@@ -5,7 +5,7 @@ from opensim_environment import OsimModel
 import time
 import os
 import matplotlib.pyplot as plt
-import opensim
+from osim_model import *
 
 
 def main():
@@ -17,6 +17,12 @@ def main():
     save_folder = 'results/DELT1/'
     if not os.path.isdir(save_folder):
         os.mkdir(save_folder)
+
+    # init joint angles
+    osim_file = modify_default_Coord(osim_file, 'elv_angle', 1.2)
+    osim_file = modify_default_Coord(osim_file, 'r_shoulder_elev', 0.14)
+    osim_file = modify_default_Coord(osim_file, 'shoulder_rot', 0.16)
+    osim_file = modify_default_Coord(osim_file, 'elbow_flexion', 0.29)
 
     #: controls
     sim_period = 5  # in sec
@@ -147,17 +153,17 @@ def osim_control(osim_file, step_size, n_steps, controls_dict, control_delay=0, 
         plt.figure("coord plot")
         for i in range(len(coord_plot)):
             ax = plt.subplot(len(coord_plot), 1, i + 1)
-            lns1 = ax.plot(time, coord_states[i, 0], 'b', label=coord_plot[i] + " angle", )
-            ax2 = ax.twinx()
-            lns2 = ax2.plot(time, coord_states[i, 1], 'c', label=coord_plot[i] + " vel")
-            #: Min jerk trajectory
-            lns = lns1 + lns2
-            labs = [l.get_label() for l in lns]
-            ax.legend(lns, labs)
+            ax.plot(time, coord_states[i, 0], 'b', label=coord_plot[i] + " angle", )
+            #ax2 = ax.twinx()
+            #lns2 = ax2.plot(time, coord_states[i, 1], 'c', label=coord_plot[i] + " vel")
+            #lns = lns1 + lns2
+            #labs = [l.get_label() for l in lns]
+            #ax.legend(lns, labs)
             ax.set_ylabel("angle [rad]", color='b')
-            ax2.set_ylabel("vel [rad/s]", color='c')
+            #ax2.set_ylabel("vel [rad/s]", color='c')
             ax.set_xlabel("time [s]")
             plt.title(coord_plot[i] + " kinematics")
+        plt.tight_layout()
         plt.savefig(save_folder + "coord_plot")
 
     if show_plot:
@@ -165,7 +171,7 @@ def osim_control(osim_file, step_size, n_steps, controls_dict, control_delay=0, 
     plt.close('all')
 
     #: Save kinematics
-    if save_kin is not None:
+    if save_kin:
         model.save_simulation(save_folder)
 
 
