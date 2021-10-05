@@ -10016,6 +10016,25 @@
 						<!--All properties of this object have their default values.-->
 					</TendonForceLengthCurve>
 				</Millard2012EquilibriumMuscle>
+				<ElasticFoundationForce name="arm-trunk">
+					<!--Material properties.-->
+					<ElasticFoundationForce::ContactParametersSet name="contact_parameters">
+						<objects>
+							<ElasticFoundationForce::ContactParameters>
+								<!--Names of geometry objects affected by these parameters.-->
+								<geometry>sphere_arm sphere_trunk</geometry>
+								<stiffness>100000000</stiffness>
+								<dissipation>0.10000000000000001</dissipation>
+								<static_friction>0</static_friction>
+								<dynamic_friction>0</dynamic_friction>
+								<viscous_friction>0</viscous_friction>
+							</ElasticFoundationForce::ContactParameters>
+						</objects>
+						<groups />
+					</ElasticFoundationForce::ContactParametersSet>
+					<!--Slip velocity (creep) at which peak static friction occurs.-->
+					<transition_velocity>0</transition_velocity>
+				</ElasticFoundationForce>
 			</objects>
 			<groups />
 		</ForceSet>
@@ -10051,7 +10070,28 @@
 		</MarkerSet>
 		<!--Geometry to be used in contact forces.-->
 		<ContactGeometrySet name="contactgeometryset">
-			<objects />
+			<objects>
+				<ContactSphere name="sphere_arm">
+					<!--Path to a Component that satisfies the Socket 'frame' of type PhysicalFrame (description: The frame to which this geometry is attached.).-->
+					<socket_frame>/bodyset/humerus</socket_frame>
+					<!--Location of geometry center in the PhysicalFrame.-->
+					<location>0 -0.20000000000000001 0</location>
+					<!--Orientation of geometry in the PhysicalFrame (body-fixed XYZ Euler angles).-->
+					<orientation>0 0 0</orientation>
+					<!--Radius of the sphere (default: 0).-->
+					<radius>0.029999999999999999</radius>
+				</ContactSphere>
+				<ContactMesh name="sphere_trunk">
+					<!--Path to a Component that satisfies the Socket 'frame' of type PhysicalFrame (description: The frame to which this geometry is attached.).-->
+					<socket_frame>/bodyset/thorax</socket_frame>
+					<!--Location of geometry center in the PhysicalFrame.-->
+					<location>-0 -0.20000000000000001 0.017999999999999999</location>
+					<!--Orientation of geometry in the PhysicalFrame (body-fixed XYZ Euler angles).-->
+					<orientation>1.5700000000000001 3.2999999999999998 1.5700000000000001</orientation>
+					<!--Path to mesh geometry file (supports .obj, .stl, .vtp). Mesh should be closed and water-tight.-->
+					<filename>ellipsoid.obj</filename>
+				</ContactMesh>
+			</objects>
 			<groups />
 		</ContactGeometrySet>
 	</Model>
