@@ -12,11 +12,11 @@ def main():
 
     if traj:
         # Define trajectory velocity bell shaped profile
-        movement = 'sh_flexion'
+        movement = 'large_sh_flexion'  # 'sh_flexion'
         period = 1
         freq = 50
         sh_pos_i = 5
-        sh_pos_f = 80
+        sh_pos_f = 120  # 80
         elb_pos_i = 15
         time = np.linspace(0, period, period*freq)
 
@@ -76,7 +76,7 @@ def main():
         for t in range(len(p_elb)):
             file.write(str(t)+'\t'+str(time[t])+'\t'+str(X[t])+'\t'+str(Y[t])+'\t'+str(Z[t])+'\n')
 
-        """file = open('trajectories/'+movement+'/'+movement+'.mot', 'w')
+        file = open('trajectories/'+movement+'/'+movement+'.mot', 'w')
         file.write('Joints\n')
         file.write('version=1\n')
         file.write('nRows='+str(len(time))+'\n')
@@ -85,10 +85,12 @@ def main():
         file.write('endheader\n')
         file.write('time\tshoulder_elev\telbow_flexion\telv_angle\n')
         for t in range(len(p_elb)):
-            file.write(str(time[t])+'    '+str(p_sh[t])+' '+str(p_elb[t])+' '+str(89)+'\n')"""
+            file.write(str(time[t])+'    '+str(p_sh[t])+' '+str(p_elb[t])+' '+str(89)+'\n')
+
+        plt.show()
 
     if static_optim:
-        movement = 'sh_flexion'
+        movement = 'large_sh_flexion'
         osim_file = 'models/full_arm_M_chuv.osim'
         osim_file = modify_default_Coord(osim_file, 'shoulder_elev', 0.1)
         osim_file = modify_default_Coord(osim_file, 'elv_angle', 1.4)
@@ -102,6 +104,8 @@ def main():
         comp_so_joints(results_dir + 'SO_Kinematics_q.sto', ik_file, results_dir)
         so_reserve(results_dir + 'SO_StaticOptimization_force.sto', results_dir)
         so_muscle(results_dir + 'SO_StaticOptimization_activation.sto', results_dir)
+
+    plt.show()
 
 
 def perform_so(model_file, ik_file, results_dir, grf_file=None, grf_xml=None, reserve_actuators=None):
@@ -272,4 +276,3 @@ def so_muscle(so_acti_file, results_dir, n_musc=10):
 
 if __name__ == '__main__':
         main()
-        plt.show()
