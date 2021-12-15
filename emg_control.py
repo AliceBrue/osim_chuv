@@ -6,7 +6,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import os
 from osim_model import *
-from kinematics import *
+#from kinematics import *
 import pandas as pd
 
 
@@ -18,7 +18,7 @@ def main():
     saved in 'save_folder'
     """
 
-    case = 'NM00'  # 'Henri' or 'NM00'
+    case = 'UP00'  # 'Henri' or 'NM00'
 
     if case == 'Henri':
         #: Osim model
@@ -141,6 +141,54 @@ def main():
                           alex_j_values=alex_j_values, alex_time=alex_time, alex_ref=alex_ref, alex_t_values=alex_t_values,
                           save_folder=save_folder, visualize=True, show_plot=True, save_kin=True)
 
+    elif case == 'UP00':
+
+        # Patient
+        id = 1
+        recording = 'test_flexion'
+        kin_file = 'C:/Users/Acer/Desktop/Pour alice/UP00' + str(id) + '/'+recording+'/df_cam1_916512060805_record_17_11_2021_1449_36.csv'
+        IK_ref_file = None
+
+        osim_file = 'models/wrap_upperLeft.osim'
+        #osim_file = modify_Millard(osim_file, 'true', 0.001, 'true')  # ignore tendon comp, fiber damping, activation dynamics
+        step_size = 0.01
+        integ_acc = 0.001
+
+        #: EMG control
+        emg_file = 'C:/Users/Acer/Desktop/Pour alice/UP00' + str(id) + '/'+recording+'/emg_norm_data.txt'
+        muscle_file = 'C:/Users/Acer/Desktop/Pour alice/UP00' + str(id) + '/'+recording+'/emg_names.txt'
+        time_file = 'C:/Users/Acer/Desktop/Pour alice/UP00' + str(id) + '/'+recording+'/emg_time.txt'
+
+        # ADD SEVERAL MUSCLES
+        osim_muscle_names = ['BICshort', 'TRIlong', 'TRIlat', 'DELT1', 'DELT2', 'DELT3', 'PECM1', 'PECM3', 'INFSP',
+                             'SUPSP', 'TRAPS', 'TRAPI', 'IMU', 'THE', 'BRA', 'FDSM', 'BRD', 'FPL', 'FCR', 'FCU', 'ECU',
+                             'EPB', 'ECR', 'ED', 'BIClong', 'FD2', 'PT', 'LAT2', 'IMU2']
+
+        ti = 52  # in sec
+        tf = 60  # -1 to simulate entire stim period
+        emg_period, period = emg_data(emg_file, muscle_file, time_file, ti, tf, unit='sec', factor=1, plot=False,
+                                      osim_muscle_names=osim_muscle_names)
+        n_steps = int((period[1] - period[0]) / step_size)
+
+        # Init joint angles from Alex
+        osim_file = lock_Coord(osim_file, ['shoulder_elev_l', 'elv_angle_l', 'shoulder_rot_l', 'elbow_flexion_l'], 'false')
+        osim_file = lock_Coord(osim_file, ['pro_sup_l', 'deviation_l', 'flexion_l'], 'true')
+        #if IK_ref_file is not None:
+            # INIT FROM PIFPAF FILE
+        # Manual init
+        osim_file = modify_default_Coord(osim_file, 'shoulder_elev_l', 0.15)
+        osim_file = modify_default_Coord(osim_file, 'elv_angle_l', 1.3)
+        osim_file = modify_default_Coord(osim_file, 'shoulder_rot_l', 0)
+        osim_file = modify_default_Coord(osim_file, 'elbow_flexion_l', 1.3)
+
+        #: Plots
+        coord_plot = ["shoulder_elev_l", "elbow_flexion_l", "elv_angle_l", 'shoulder_rot_l']
+        save_folder = 'C:/Users/Acer/Desktop/Pour alice/UP00' + str(id) + '/'+recording+'/'
+
+        osim_control(osim_file, step_size, n_steps, emg_period, integ_acc=integ_acc,
+                     coord_plot=coord_plot, IK_ref_file=IK_ref_file, save_folder=save_folder,
+                     visualize=True, show_plot=True, save_kin=True)
+
 
 def osim_control(osim_file, step_size, n_steps, emg_period, integ_acc=0.0001,
                  coord_plot=['shoulder_elev', 'elbow_flexion'], IK_ref_file=None, save_folder="results/",
@@ -166,7 +214,8 @@ def osim_control(osim_file, step_size, n_steps, emg_period, integ_acc=0.0001,
         os.mkdir(save_folder)
 
     #: Osim model
-    model = OsimModel(osim_file, step_size, integ_acc, body_ext_force=None, visualize=visualize, save_kin=save_kin)
+    model = OsimModel(osim_file, step_size, integ_acc, body_ext_force=None, alex_torques=None, moments=None,
+                      visualize=visualize, save_kin=save_kin)
     n_muscles = model.model.getMuscles().getSize()
     muscle_names = [None]*n_muscles
     for i in range(n_muscles):
@@ -220,8 +269,8 @@ def osim_control(osim_file, step_size, n_steps, emg_period, integ_acc=0.0001,
     time = np.arange(n_steps-1)*step_size
     if coord_plot is not None:
         plt.figure("coord plot")
-        for i in range(max(len(coord_plot), 2)):
-            ax = plt.subplot(len(coord_plot[:2]), 1, i+1)
+        for i in range(min(len(coord_plot), 2)):
+            ax = plt.subplot(min(len(coord_plot), 2), 1, i+1)
             ax.plot(time, coord_states[i, 0]*180/3.14, 'b', label=coord_plot[i]+" angle", )
             if IK_ref_file is not None and coord_plot[i] in IK_joints:
                 ax.plot(IK_ref[:, 0], IK_ref[:, IK_joints.index(coord_plot[i])+1], '--b',
@@ -352,9 +401,9 @@ def osim_alex_control(osim_file, step_size, n_steps, emg_period, emg_factor=1, i
         res = model.get_state_dict()
 
         sh[:, j - 1] = res["markers"]['shoulder']['pos']
-        m1[:, j - 1] = res["markers"]['m1']['pos']
+        m1[:, j - 1] = res["markers"]['wrist']['pos']  #'m1'
         elb[:, j - 1] = res["markers"]['elbow']['pos']
-        m2[:, j - 1] = res["markers"]['m2']['pos']
+        #m2[:, j - 1] = res["markers"]['m2']['pos']
 
         if coord_plot is not None:
             for i in range(len(coord_plot)):

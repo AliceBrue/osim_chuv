@@ -58,15 +58,13 @@
 							<!--Name of geometry file.-->
 							<mesh_file>thorax.vtp</mesh_file>
 						</Mesh>
-						<Mesh name="thorax_geom_2">
+						<Mesh name="base_geom_2">
 							<!--Path to a Component that satisfies the Socket 'frame' of type Frame.-->
 							<socket_frame>..</socket_frame>
 							<!--Scale factors in X, Y, Z directions respectively.-->
 							<scale_factors>1 1 1</scale_factors>
 							<!--Default appearance attributes for this Geometry-->
 							<Appearance>
-								<!--Flag indicating whether the associated Geometry is visible or hidden.-->
-								<visible>true</visible>
 								<!--The opacity used to display the geometry between 0:transparent, 1:opaque.-->
 								<opacity>1</opacity>
 								<!--The color, (red, green, blue), [0, 1], used to display the geometry. -->
@@ -74,6 +72,36 @@
 							</Appearance>
 							<!--Name of geometry file.-->
 							<mesh_file>ground_spine.vtp</mesh_file>
+						</Mesh>
+						<Mesh name="base_geom_3">
+							<!--Path to a Component that satisfies the Socket 'frame' of type Frame.-->
+							<socket_frame>..</socket_frame>
+							<!--Scale factors in X, Y, Z directions respectively.-->
+							<scale_factors>1 1 1</scale_factors>
+							<!--Default appearance attributes for this Geometry-->
+							<Appearance>
+								<!--The opacity used to display the geometry between 0:transparent, 1:opaque.-->
+								<opacity>1</opacity>
+								<!--The color, (red, green, blue), [0, 1], used to display the geometry. -->
+								<color>1 1 1</color>
+							</Appearance>
+							<!--Name of geometry file.-->
+							<mesh_file>ground_skull.vtp</mesh_file>
+						</Mesh>
+						<Mesh name="base_geom_4">
+							<!--Path to a Component that satisfies the Socket 'frame' of type Frame.-->
+							<socket_frame>..</socket_frame>
+							<!--Scale factors in X, Y, Z directions respectively.-->
+							<scale_factors>1 1 1</scale_factors>
+							<!--Default appearance attributes for this Geometry-->
+							<Appearance>
+								<!--The opacity used to display the geometry between 0:transparent, 1:opaque.-->
+								<opacity>1</opacity>
+								<!--The color, (red, green, blue), [0, 1], used to display the geometry. -->
+								<color>1 1 1</color>
+							</Appearance>
+							<!--Name of geometry file.-->
+							<mesh_file>ground_jaw.vtp</mesh_file>
 						</Mesh>
 					</attached_geometry>
 					<!--Set of wrap objects fixed to this body that GeometryPaths can wrap over.This property used to be a member of Body but was moved up with the introduction of Frames.-->
@@ -3860,7 +3888,7 @@
 					<coordinates>
 						<Coordinate name="elv_angle">
 							<!--The value of this coordinate before any value has been set. Rotational coordinate value is in radians and Translational in meters.-->
-							<default_value>1.4</default_value>
+							<default_value>1.45</default_value>
 							<!--The speed value of this coordinate before any value has been set. Rotational coordinate value is in rad/s and Translational in m/s.-->
 							<default_speed_value>0</default_speed_value>
 							<!--The minimum and maximum values that the coordinate can range between. Rotational coordinate range in radians and Translational in meters.-->
@@ -3983,7 +4011,7 @@
 					<coordinates>
 						<Coordinate name="shoulder_elev">
 							<!--The value of this coordinate before any value has been set. Rotational coordinate value is in radians and Translational in meters.-->
-							<default_value>0.1</default_value>
+							<default_value>0.10000000000000001</default_value>
 							<!--The speed value of this coordinate before any value has been set. Rotational coordinate value is in rad/s and Translational in m/s.-->
 							<default_speed_value>0</default_speed_value>
 							<!--The minimum and maximum values that the coordinate can range between. Rotational coordinate range in radians and Translational in meters.-->
@@ -4122,7 +4150,7 @@
 					<coordinates>
 						<Coordinate name="shoulder_rot">
 							<!--The value of this coordinate before any value has been set. Rotational coordinate value is in radians and Translational in meters.-->
-							<default_value>0.15</default_value>
+							<default_value>0.14999999999999999</default_value>
 							<!--The speed value of this coordinate before any value has been set. Rotational coordinate value is in rad/s and Translational in m/s.-->
 							<default_speed_value>0</default_speed_value>
 							<!--The minimum and maximum values that the coordinate can range between. Rotational coordinate range in radians and Translational in meters.-->
@@ -4245,7 +4273,7 @@
 					<coordinates>
 						<Coordinate name="elbow_flexion">
 							<!--The value of this coordinate before any value has been set. Rotational coordinate value is in radians and Translational in meters.-->
-							<default_value>0.3</default_value>
+							<default_value>0.29999999999999999</default_value>
 							<!--The speed value of this coordinate before any value has been set. Rotational coordinate value is in rad/s and Translational in m/s.-->
 							<default_speed_value>0</default_speed_value>
 							<!--The minimum and maximum values that the coordinate can range between. Rotational coordinate range in radians and Translational in meters.-->
@@ -5136,7 +5164,7 @@
 						<!--Default appearance attributes for this GeometryPath-->
 						<Appearance>
 							<!--Flag indicating whether the associated Geometry is visible or hidden.-->
-							<visible>false</visible>
+							<visible>true</visible>
 							<!--The color, (red, green, blue), [0, 1], used to display the geometry. -->
 							<color>0.80000000000000004 0.10000000000000001 0.10000000000000001</color>
 						</Appearance>
@@ -5230,7 +5258,7 @@
 						<!--Default appearance attributes for this GeometryPath-->
 						<Appearance>
 							<!--Flag indicating whether the associated Geometry is visible or hidden.-->
-							<visible>false</visible>
+							<visible>true</visible>
 							<!--The color, (red, green, blue), [0, 1], used to display the geometry. -->
 							<color>0.80000000000000004 0.10000000000000001 0.10000000000000001</color>
 						</Appearance>
@@ -5322,7 +5350,7 @@
 						<!--Default appearance attributes for this GeometryPath-->
 						<Appearance>
 							<!--Flag indicating whether the associated Geometry is visible or hidden.-->
-							<visible>false</visible>
+							<visible>true</visible>
 							<!--The color, (red, green, blue), [0, 1], used to display the geometry. -->
 							<color>0.80000000000000004 0.10000000000000001 0.10000000000000001</color>
 						</Appearance>
@@ -5407,7 +5435,7 @@
 						<!--Default appearance attributes for this GeometryPath-->
 						<Appearance>
 							<!--Flag indicating whether the associated Geometry is visible or hidden.-->
-							<visible>false</visible>
+							<visible>true</visible>
 							<!--The color, (red, green, blue), [0, 1], used to display the geometry. -->
 							<color>0.80000000000000004 0.10000000000000001 0.10000000000000001</color>
 						</Appearance>
@@ -5611,7 +5639,7 @@
 						<!--Default appearance attributes for this GeometryPath-->
 						<Appearance>
 							<!--Flag indicating whether the associated Geometry is visible or hidden.-->
-							<visible>false</visible>
+							<visible>true</visible>
 							<!--The color, (red, green, blue), [0, 1], used to display the geometry. -->
 							<color>0.80000001192092896 0 0.20000000298023224</color>
 						</Appearance>
@@ -5758,7 +5786,7 @@
 						<!--Default appearance attributes for this GeometryPath-->
 						<Appearance>
 							<!--Flag indicating whether the associated Geometry is visible or hidden.-->
-							<visible>false</visible>
+							<visible>true</visible>
 							<!--The color, (red, green, blue), [0, 1], used to display the geometry. -->
 							<color>0.80000001192092896 0 0.20000000298023224</color>
 						</Appearance>
@@ -5874,7 +5902,7 @@
 						<!--Default appearance attributes for this GeometryPath-->
 						<Appearance>
 							<!--Flag indicating whether the associated Geometry is visible or hidden.-->
-							<visible>false</visible>
+							<visible>true</visible>
 							<!--The color, (red, green, blue), [0, 1], used to display the geometry. -->
 							<color>0.80000001192092896 0 0.20000000298023224</color>
 						</Appearance>
@@ -5974,7 +6002,7 @@
 						<!--Default appearance attributes for this GeometryPath-->
 						<Appearance>
 							<!--Flag indicating whether the associated Geometry is visible or hidden.-->
-							<visible>false</visible>
+							<visible>true</visible>
 							<!--The color, (red, green, blue), [0, 1], used to display the geometry. -->
 							<color>0.80000001192092896 0 0.20000000298023224</color>
 						</Appearance>
@@ -6076,7 +6104,7 @@
 						<!--Default appearance attributes for this GeometryPath-->
 						<Appearance>
 							<!--Flag indicating whether the associated Geometry is visible or hidden.-->
-							<visible>false</visible>
+							<visible>true</visible>
 							<!--The color, (red, green, blue), [0, 1], used to display the geometry. -->
 							<color>0.80000001192092896 0 0.20000000298023224</color>
 						</Appearance>
@@ -6176,7 +6204,7 @@
 						<!--Default appearance attributes for this GeometryPath-->
 						<Appearance>
 							<!--Flag indicating whether the associated Geometry is visible or hidden.-->
-							<visible>false</visible>
+							<visible>true</visible>
 							<!--The color, (red, green, blue), [0, 1], used to display the geometry. -->
 							<color>0.80000001192092896 0 0.20000000298023224</color>
 						</Appearance>
@@ -6292,7 +6320,7 @@
 						<!--Default appearance attributes for this GeometryPath-->
 						<Appearance>
 							<!--Flag indicating whether the associated Geometry is visible or hidden.-->
-							<visible>false</visible>
+							<visible>true</visible>
 							<!--The color, (red, green, blue), [0, 1], used to display the geometry. -->
 							<color>0.80000001192092896 0 0.20000000298023224</color>
 						</Appearance>
@@ -6408,7 +6436,7 @@
 						<!--Default appearance attributes for this GeometryPath-->
 						<Appearance>
 							<!--Flag indicating whether the associated Geometry is visible or hidden.-->
-							<visible>false</visible>
+							<visible>true</visible>
 							<!--The color, (red, green, blue), [0, 1], used to display the geometry. -->
 							<color>0.80000001192092896 0 0.20000000298023224</color>
 						</Appearance>
@@ -6572,7 +6600,7 @@
 						<!--Default appearance attributes for this GeometryPath-->
 						<Appearance>
 							<!--Flag indicating whether the associated Geometry is visible or hidden.-->
-							<visible>false</visible>
+							<visible>true</visible>
 							<!--The color, (red, green, blue), [0, 1], used to display the geometry. -->
 							<color>0.80000001192092896 0 0.20000000298023224</color>
 						</Appearance>
@@ -6750,7 +6778,7 @@
 						<!--Default appearance attributes for this GeometryPath-->
 						<Appearance>
 							<!--Flag indicating whether the associated Geometry is visible or hidden.-->
-							<visible>false</visible>
+							<visible>true</visible>
 							<!--The color, (red, green, blue), [0, 1], used to display the geometry. -->
 							<color>0.80000001192092896 0 0.20000000298023224</color>
 						</Appearance>
@@ -6920,7 +6948,7 @@
 						<!--Default appearance attributes for this GeometryPath-->
 						<Appearance>
 							<!--Flag indicating whether the associated Geometry is visible or hidden.-->
-							<visible>false</visible>
+							<visible>true</visible>
 							<!--The color, (red, green, blue), [0, 1], used to display the geometry. -->
 							<color>0.80000001192092896 0 0.20000000298023224</color>
 						</Appearance>
@@ -7098,7 +7126,7 @@
 						<!--Default appearance attributes for this GeometryPath-->
 						<Appearance>
 							<!--Flag indicating whether the associated Geometry is visible or hidden.-->
-							<visible>false</visible>
+							<visible>true</visible>
 							<!--The color, (red, green, blue), [0, 1], used to display the geometry. -->
 							<color>0.80000001192092896 0 0.20000000298023224</color>
 						</Appearance>
@@ -7276,7 +7304,7 @@
 						<!--Default appearance attributes for this GeometryPath-->
 						<Appearance>
 							<!--Flag indicating whether the associated Geometry is visible or hidden.-->
-							<visible>false</visible>
+							<visible>true</visible>
 							<!--The color, (red, green, blue), [0, 1], used to display the geometry. -->
 							<color>0.80000001192092896 0 0.20000000298023224</color>
 						</Appearance>
@@ -7454,7 +7482,7 @@
 						<!--Default appearance attributes for this GeometryPath-->
 						<Appearance>
 							<!--Flag indicating whether the associated Geometry is visible or hidden.-->
-							<visible>false</visible>
+							<visible>true</visible>
 							<!--The color, (red, green, blue), [0, 1], used to display the geometry. -->
 							<color>0.80000001192092896 0 0.20000000298023224</color>
 						</Appearance>
@@ -7562,7 +7590,7 @@
 						<!--Default appearance attributes for this GeometryPath-->
 						<Appearance>
 							<!--Flag indicating whether the associated Geometry is visible or hidden.-->
-							<visible>false</visible>
+							<visible>true</visible>
 							<!--The color, (red, green, blue), [0, 1], used to display the geometry. -->
 							<color>0.80000001192092896 0 0.20000000298023224</color>
 						</Appearance>
@@ -7682,7 +7710,7 @@
 						<!--Default appearance attributes for this GeometryPath-->
 						<Appearance>
 							<!--Flag indicating whether the associated Geometry is visible or hidden.-->
-							<visible>false</visible>
+							<visible>true</visible>
 							<!--The color, (red, green, blue), [0, 1], used to display the geometry. -->
 							<color>0.80000001192092896 0 0.20000000298023224</color>
 						</Appearance>
@@ -7794,7 +7822,7 @@
 						<!--Default appearance attributes for this GeometryPath-->
 						<Appearance>
 							<!--Flag indicating whether the associated Geometry is visible or hidden.-->
-							<visible>false</visible>
+							<visible>true</visible>
 							<!--The color, (red, green, blue), [0, 1], used to display the geometry. -->
 							<color>0.80000001192092896 0 0.20000000298023224</color>
 						</Appearance>
@@ -7906,7 +7934,7 @@
 						<!--Default appearance attributes for this GeometryPath-->
 						<Appearance>
 							<!--Flag indicating whether the associated Geometry is visible or hidden.-->
-							<visible>false</visible>
+							<visible>true</visible>
 							<!--The color, (red, green, blue), [0, 1], used to display the geometry. -->
 							<color>0.80000001192092896 0 0.20000000298023224</color>
 						</Appearance>
@@ -8081,7 +8109,7 @@
 						<!--Default appearance attributes for this GeometryPath-->
 						<Appearance>
 							<!--Flag indicating whether the associated Geometry is visible or hidden.-->
-							<visible>false</visible>
+							<visible>true</visible>
 							<!--The color, (red, green, blue), [0, 1], used to display the geometry. -->
 							<color>0.80000001192092896 0 0.20000000298023224</color>
 						</Appearance>
@@ -8230,7 +8258,7 @@
 						<!--Default appearance attributes for this GeometryPath-->
 						<Appearance>
 							<!--Flag indicating whether the associated Geometry is visible or hidden.-->
-							<visible>false</visible>
+							<visible>true</visible>
 							<!--The color, (red, green, blue), [0, 1], used to display the geometry. -->
 							<color>0.80000001192092896 0 0.20000000298023224</color>
 						</Appearance>
@@ -8335,7 +8363,7 @@
 						<!--Default appearance attributes for this GeometryPath-->
 						<Appearance>
 							<!--Flag indicating whether the associated Geometry is visible or hidden.-->
-							<visible>false</visible>
+							<visible>true</visible>
 							<!--The color, (red, green, blue), [0, 1], used to display the geometry. -->
 							<color>0.80000001192092896 0 0.20000000298023224</color>
 						</Appearance>
@@ -8435,7 +8463,7 @@
 						<!--Default appearance attributes for this GeometryPath-->
 						<Appearance>
 							<!--Flag indicating whether the associated Geometry is visible or hidden.-->
-							<visible>false</visible>
+							<visible>true</visible>
 							<!--The color, (red, green, blue), [0, 1], used to display the geometry. -->
 							<color>0.80000001192092896 0 0.20000000298023224</color>
 						</Appearance>
@@ -8549,7 +8577,7 @@
 						<!--Default appearance attributes for this GeometryPath-->
 						<Appearance>
 							<!--Flag indicating whether the associated Geometry is visible or hidden.-->
-							<visible>false</visible>
+							<visible>true</visible>
 							<!--The color, (red, green, blue), [0, 1], used to display the geometry. -->
 							<color>0.80000001192092896 0 0.20000000298023224</color>
 						</Appearance>
@@ -8653,7 +8681,7 @@
 						<!--Default appearance attributes for this GeometryPath-->
 						<Appearance>
 							<!--Flag indicating whether the associated Geometry is visible or hidden.-->
-							<visible>false</visible>
+							<visible>true</visible>
 							<!--The color, (red, green, blue), [0, 1], used to display the geometry. -->
 							<color>0.80000001192092896 0 0.20000000298023224</color>
 						</Appearance>
@@ -8769,7 +8797,7 @@
 						<!--Default appearance attributes for this GeometryPath-->
 						<Appearance>
 							<!--Flag indicating whether the associated Geometry is visible or hidden.-->
-							<visible>false</visible>
+							<visible>true</visible>
 							<!--The color, (red, green, blue), [0, 1], used to display the geometry. -->
 							<color>0.80000001192092896 0 0.20000000298023224</color>
 						</Appearance>
@@ -8875,7 +8903,7 @@
 						<!--Default appearance attributes for this GeometryPath-->
 						<Appearance>
 							<!--Flag indicating whether the associated Geometry is visible or hidden.-->
-							<visible>false</visible>
+							<visible>true</visible>
 							<!--The color, (red, green, blue), [0, 1], used to display the geometry. -->
 							<color>0.80000001192092896 0 0.20000000298023224</color>
 						</Appearance>
@@ -9012,7 +9040,7 @@
 						<!--Default appearance attributes for this GeometryPath-->
 						<Appearance>
 							<!--Flag indicating whether the associated Geometry is visible or hidden.-->
-							<visible>false</visible>
+							<visible>true</visible>
 							<!--The color, (red, green, blue), [0, 1], used to display the geometry. -->
 							<color>0.80000001192092896 0 0.20000000298023224</color>
 						</Appearance>
@@ -9124,7 +9152,7 @@
 						<!--Default appearance attributes for this GeometryPath-->
 						<Appearance>
 							<!--Flag indicating whether the associated Geometry is visible or hidden.-->
-							<visible>false</visible>
+							<visible>true</visible>
 							<!--The color, (red, green, blue), [0, 1], used to display the geometry. -->
 							<color>0.80000001192092896 0 0.20000000298023224</color>
 						</Appearance>
@@ -9263,7 +9291,7 @@
 						<!--Default appearance attributes for this GeometryPath-->
 						<Appearance>
 							<!--Flag indicating whether the associated Geometry is visible or hidden.-->
-							<visible>false</visible>
+							<visible>true</visible>
 							<!--The color, (red, green, blue), [0, 1], used to display the geometry. -->
 							<color>0.80000001192092896 0 0.20000000298023224</color>
 						</Appearance>
@@ -9363,7 +9391,7 @@
 						<!--Default appearance attributes for this GeometryPath-->
 						<Appearance>
 							<!--Flag indicating whether the associated Geometry is visible or hidden.-->
-							<visible>false</visible>
+							<visible>true</visible>
 							<!--The color, (red, green, blue), [0, 1], used to display the geometry. -->
 							<color>0.80000001192092896 0 0.20000000298023224</color>
 						</Appearance>
@@ -9461,14 +9489,6 @@
 					<socket_parent_frame>/bodyset/hand</socket_parent_frame>
 					<!--The fixed location of the station expressed in its parent frame.-->
 					<location>0 0 0</location>
-					<!--Flag (true or false) specifying whether the marker is fixed in its parent frame during the marker placement step of scaling.  If false, the marker is free to move within its parent Frame to match its experimental counterpart.-->
-					<fixed>false</fixed>
-				</Marker>
-				<Marker name="ground">
-					<!--Path to a Component that satisfies the Socket 'parent_frame' of type PhysicalFrame (description: The frame to which this station is fixed.).-->
-					<socket_parent_frame>/ground</socket_parent_frame>
-					<!--The fixed location of the station expressed in its parent frame.-->
-					<location>0.59999999999999998 0.46000000000000002 0.20000000000000001</location>
 					<!--Flag (true or false) specifying whether the marker is fixed in its parent frame during the marker placement step of scaling.  If false, the marker is free to move within its parent Frame to match its experimental counterpart.-->
 					<fixed>false</fixed>
 				</Marker>

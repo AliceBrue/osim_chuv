@@ -63,7 +63,12 @@ def lock_Coord(osim_file, coords, lock):
         line = lines[l]
         if len(line.split()[0].split('<')) > 1 and line.split()[0].split('<')[1] == 'Coordinate':
             if line.split()[1].split('"')[1] in coords:
-                new_lines[l+10] = '\t\t\t\t\t\t\t<locked>'+lock+'</locked>\n'
+                p = 1
+                subline = lines[l+p]
+                while subline.split()[0].split('>')[0] != '<locked':
+                    p += 1
+                    subline = lines[l + p]
+                new_lines[l+p] = '\t\t\t\t\t\t\t<locked>'+lock+'</locked>\n'
     with open(osim_file, 'w') as file:
         file.writelines(new_lines)
     return osim_file
@@ -84,7 +89,12 @@ def modify_default_Coord(osim_file, coord, value):
         line = lines[l]
         if len(line.split()[0].split('<')) > 1 and line.split()[0].split('<')[1] == 'Coordinate':
             if line.split()[1].split('"')[1] == coord:
-                new_lines[l + 2] = '\t\t\t\t\t\t\t<default_value>'+str(value)+'</default_value>\n'
+                p = 0
+                subline = lines[l + p]
+                while subline.split()[0].split('>')[0] != '<default_value':
+                    p += 1
+                    subline = lines[l + p]
+                new_lines[l + p] = '\t\t\t\t\t\t\t<default_value>'+str(value)+'</default_value>\n'
     with open(osim_file, 'w') as file:
         file.writelines(new_lines)
     return osim_file

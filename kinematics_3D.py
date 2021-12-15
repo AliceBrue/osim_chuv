@@ -3,7 +3,7 @@ import xlrd
 import matplotlib.pyplot as plt
 import os
 from emg_control import emg_data
-
+import pandas as pd
 from opensim_environment import OsimModel
 
 def main():
@@ -20,114 +20,49 @@ def main():
     """
 
     # Movement of interest
-    model_name = 'UP001'  #'Henri'
-    kin_folder = 'C:/Users/Acer/Desktop/Pour alice/UP001/kinematics/'  #'kinematics/'
-    emg_folder = 'C:/Users/Acer/Desktop/Pour alice/UP001/emg/'  #'emg/'
-    movement = 'sh_flexion'  # 'sh_flexion', 'elb_flexion', 'arm_flexion' or 'sh_adduction'
+    model_name = 'UP001'
+    kin_folder = 'C:/Users/Acer/Desktop/Pour alice/UP001/Tracked_cam/'
+    emg_folder = 'C:/Users/Acer/Desktop/Pour alice/UP001/emg/'
+
+    movement = 'scaling'
     IK_file = None  # None or path (kin_folder+movement+'/joints_IK_'+movement+'.mot')
-    cmc_files = None  # None or path (kin_folder+movement+'/'+model_name+'_')
-    cmc_ti = 1.48
-    cmc_tf = 2.0
-    delay_video = 108.4 - 55.48
-
-    if model_name == 'Henri':
-        # Static kin data for scaling
-        if movement in ['sh_flexion', 'elb_flexion', 'arm_flexion']:
-            ti = 1.24
-            tf = 1.30
-            markers = ['shoulder', 'elbow', 'wrist']
-            scaling_ref = {'shoulder_hip': 0.55, 'shoulder_elbow': 0.34, 'elbow_wrist': 0.28, 'shoulder_ear': 0.22,
-                           'ear_eye': 0.13}
-            ground_ref = ['shoulder', 'shoulder', 0.2]
-            static_scaling, static_ground_ref = scaling_kin_data(kin_folder, 'static_'+movement, ti, tf, markers,
-                                                                 scaling_ref, ground_ref, conf_th=0.7, plot=False)
-
-        elif movement in ['sh_adduction']:
-            ti = 2.50
-            tf = 2.51
-            markers = ['shoulder', 'elbow', 'wrist']
-            scaling_ref = {'shoulder_shoulder': 0.42, 'shoulder_hip': 0.55, 'shoulder_elbow': 0.34, 'elbow_wrist': 0.28}
-            ground_ref = [0.0, 'shoulder', 'shoulder']
-            static_scaling, static_ground_ref = scaling_kin_data(kin_folder, 'static_'+movement, ti, tf, markers,
-                                                                 scaling_ref, ground_ref, conf_th=0.7, plot=False)
-
-        # Movement kin data
-        if movement == 'sh_flexion':
-            ti = 1.48
-            tf = 2.0
-            joint_angles = scaled_kin_data(kin_folder, movement, ti, tf, markers, static_scaling, static_ground_ref,
-                                           plot=False)
-            if IK_file is not None:
-                comp_IK_joints(IK_file, joint_angles, ['elv_angle', 'shoulder_rot'])
-
-        elif movement == 'elb_flexion':
-            ti = 1.24
-            tf = 1.47
-            joint_angles = scaled_kin_data(kin_folder, movement, ti, tf, markers, static_scaling, static_ground_ref,
-                                           plot=False)
-            if IK_file is not None:
-                comp_IK_joints(IK_file, joint_angles, ['elv_angle', 'shoulder_rot'])
-
-        elif movement == 'arm_flexion':
-            ti = 2.18
-            tf = 2.29
-            joint_angles = scaled_kin_data(kin_folder, movement, ti, tf, markers, static_scaling, static_ground_ref,
-                                           plot=False)
-            if IK_file is not None:
-                comp_IK_joints(IK_file, joint_angles, ['elv_angle', 'shoulder_rot'])
-
-        elif movement == 'sh_adduction':
-            ti = 2.50
-            tf = 3.02
-            joint_angles = scaled_kin_data(kin_folder, movement, ti, tf, markers, static_scaling, static_ground_ref,
-                                           plot=False)
-            if IK_file is not None:
-                comp_IK_joints(IK_file, joint_angles, ['elv_angle', 'shoulder_rot'])
-
-        # CMC results
-        if cmc_files is not None:
-            cmc_states_file = cmc_files+'states.sto'
-            cmc_force_file = cmc_files+'Actuation_force.sto'
-            cmc_error_file = cmc_files+'pErr.sto'
-            plot_cmc_reserve(cmc_force_file, cmc_error_file, 4)
-            comp_cmc_emg(cmc_states_file, emg_folder, cmc_ti, cmc_tf, delay_video,
-                         disabled_muscles=['TRAPM', 'RHS', 'RHI', 'LAT1', 'LAT2', 'LAT3', 'SUP'], cmc_exc_file=None,
-                         n_emg=8, emg_step=0.5)
+    delay_video = 0
 
     if model_name == 'UP001':
-        # Static kin data for scaling
-        ti = 0.03
-        tf = 0.06
-        markers = ['shoulder', 'elbow', 'wrist']
-        scaling_ref = {'shoulder_hip': 0.42, 'shoulder_elbow': 0.3, 'elbow_wrist': 0.27}
-        ground_ref = ['shoulder', 'shoulder', 0.2]
-        smoothing = 5
-        static_scaling, static_ground_ref = scaling_kin_data(kin_folder, 'static_' + movement, ti, tf, markers,
-                                                             scaling_ref, ground_ref, conf_th=0.7, side='left',
-                                                             smoothing=smoothing, plot=False)
+        if movement == 'scaling':
+            # Static kin data for scaling
+            kin_file = kin_folder + 'df_cam1_916512060805_record_17_11_2021_1449_36.csv'  # 'df_cam1_816612061599_record_17_11_2021_1448_46.csv'
+            results_folder = 'C:/Users/Acer/Desktop/Pour alice/UP001/kinematics/' + movement + '/'
+            ti = 0  # in sec
+            tf = 10
+            markers = {'shoulder': 'left_shoulder', 'elbow': 'left_elbow', 'wrist': 'left_wrist'}
+                       #'shoulder_r': 'right_shoulder', 'elbow_r': 'right_elbow', 'wrist_r': 'right_wrist'}
+            smoothing = 3
+            scaling_kin_data(kin_file, results_folder, ti, tf, markers, smoothing=smoothing, plot=True)
 
-        # Movement kin data
-        ti = 4.0
-        tf = 4.48
-        smoothing = 19
-        joint_angles = scaled_kin_data(kin_folder, movement, ti, tf, markers, static_scaling, static_ground_ref,
-                                       side='left', smoothing=smoothing, plot=True)
+        else:
+            # Movement kin data
+            ti = 4.0
+            tf = 4.48
+            smoothing = 19
+            joint_angles = scaled_kin_data(kin_folder, movement, ti, tf, markers, static_scaling, static_ground_ref,
+                                           side='left', smoothing=smoothing, plot=True)
 
-        IK_file = 'C:/Users/Acer/Desktop/Pour alice/UP001/kinematics/sh_flexion/very_smooth_IK_sh_flexion.mot'
-        ti = 28.7
-        tf = 34.1
-        smoothing = 7
-        txt_path = 'C:/Users/Acer/Desktop/Pour alice/UP001/kinematics/sh_flexion/29_34'
-        ros_txt_file(IK_file, ti, tf, txt_path, smoothing=smoothing, joints=['shoulder_elev_l', 'elbow_flexion_l'])
+            IK_file = 'C:/Users/Acer/Desktop/Pour alice/UP001/kinematics/sh_flexion/very_smooth_IK_sh_flexion.mot'
+            ti = 28.7
+            tf = 34.1
+            smoothing = 7
+            txt_path = 'C:/Users/Acer/Desktop/Pour alice/UP001/kinematics/sh_flexion/29_34'
+            ros_txt_file(IK_file, ti, tf, txt_path, smoothing=smoothing, joints=['shoulder_elev_l', 'elbow_flexion_l'])
 
-        #if IK_file is not None:
-        #    comp_IK_joints(IK_file, joint_angles, ['elv_angle', 'shoulder_rot'])
+            #if IK_file is not None:
+            #    comp_IK_joints(IK_file, joint_angles, ['elv_angle', 'shoulder_rot'])
 
     plt.show()
 
 
 def ros_txt_file(IK_file, ti, tf, txt_path, smoothing=None, joints=['shoulder_elev_l', 'elbow_flexion_l']):
-    # IK data
+    # IK data!
     IK_data = open(IK_file, 'r')
     lines = IK_data.readlines()
     IK_joints = lines[10].split()[1:]
@@ -189,201 +124,88 @@ def ros_txt_file(IK_file, ti, tf, txt_path, smoothing=None, joints=['shoulder_el
             vel_file.write(str(ros_vel_traj[l, 0]*3.14/180) + ' ' + str(ros_vel_traj[l, 1]*3.14/180) + '\n')
 
 
-def scaling_kin_data(kin_folder, movement, ti, tf, markers, scaling_ref, ground_ref, time_step=0.0333, conf_th=0.5,
-                     side='right', smoothing=None, plot=False):
+def scaling_kin_data(kin_file, kin_folder, ti, tf, markers, time_step=0.0333, smoothing=None, plot=False):
     """
-    Extract kinematics data of 'static' period of interest from 'kinematics.xls'
-    Compute a scaling factor from subject measures (print openpifpaf confidences and scaling std)
-    Save extracted data in osim format .trc in 'kin_folder/movement/' folder
-    INPUTS: - kin_folder: string, path of the folder where 'kinematics.xls' is and extracted data will be saved
-            - movement: string, name of the static period of interest in ['static_sh_flexion', 'static_sh_adduction']
+    Extract kinematics data of 'static' period of interest from kin file .xls
+    Write extracted data in osim format .trc in 'kin_folder/movement/' folder
+    INPUTS: - kin_file: string, path of the kin file .xls
+            - kin_folder: string, name of the folder to save results
             - ti: float, static period initial time in video
             - tf: float, static period final time in video
-            - markers: string array, markers kin data to save in osim format .trc
-            - scaling_ref: dictionary, subject measures ({'shoulder_hip': 0.55, ...}}
-            - ground_ref: array, osim ground references
+            - markers: dictionnary, markers name and corresponding pifpaf point to save in osim format .trc
             - time_step: float, openpifpaf time step
-            - conf_th: float, confidence threshold above which openpifpaf marker are rejected
             - plot: bool, to plot or not the extracted data
-    OUTPUTS: - scaling: float, computed scaling factor
-             - static_ground_ref: array, osim ground references
+    OUTPUTS: - write trc file
     """
-    if side == 'right':
-        contralat = 'left'
-    elif side == 'left':
-        contralat = 'right'
-    # kin data
-    workbook = xlrd.open_workbook(kin_folder+'kinematics.xls')
-    sheet = workbook.sheet_by_index(0)
-    bodies = []
-    for i in range(sheet.ncols):
-        bodies.append(sheet.cell_value(0, i))
-    scale_bodies = []
-    for ref in list(scaling_ref.keys()):
-        ref1 = ref.split('_')[0]
-        ref2 = ref.split('_')[1]
-        if ref1 == ref2:
-            scale_bodies.append(contralat+'_'+ref1)
-        if ref1 not in markers and ref1 not in scale_bodies:
-            scale_bodies.append(ref1)
-        if ref2 not in markers and ref2 not in scale_bodies:
-            scale_bodies.append(ref2)
-    markers_i = np.zeros(len(markers))
-    scale_bodies_i = np.zeros(len(scale_bodies))
-    for i in range(len(markers)):
-        markers_i[i] = bodies.index(side+'_'+markers[i]+'_x')
-    markers_i = markers_i.astype(int)
-    for i in range(len(scale_bodies)):
-        if scale_bodies[i].split('_')[0] == contralat:
-            scale_bodies_i[i] = bodies.index(scale_bodies[i] + '_x')
-        else:
-            scale_bodies_i[i] = bodies.index(side+'_'+scale_bodies[i]+'_x')
-    scale_bodies_i = scale_bodies_i.astype(int)
+    if not os.path.isdir(kin_folder):
+        os.mkdir(kin_folder)
 
-    period = [ti // 1 * 60 + ti % 1 * 100, tf // 1 * 60 + tf % 1 * 100]
-    time = np.zeros(int((period[1]-period[0])/time_step))
-    kin_data = np.zeros((int((period[1]-period[0])/time_step), len(markers)*3))
-    scale_data = np.zeros((int((period[1]-period[0])/time_step), len(scale_bodies)*2))
-    confidence_data = np.zeros((int((period[1]-period[0])/time_step), len(markers)+len(scale_bodies)))
-
-    for t in range(1, sheet.nrows):
-        if float(sheet.cell_value(1, 0)) >= period[0]:
-            t0 = 1
-        elif float(sheet.cell_value(t, 0)) < period[0] and float(sheet.cell_value(t+1, 0)) >= period[0]:
-            t0 = t+1
-        if float(sheet.cell_value(t, 0)) >= period[0] and float(sheet.cell_value(t, 0)) <= period[1]:
-            time[t-t0] = sheet.cell_value(t, 0)-sheet.cell_value(t0, 0)
-            for i in range(len(markers)):
-                kin_data[t-t0, 3*i] = sheet.cell_value(t, markers_i[i])
-                kin_data[t - t0, 3*i+1] = sheet.cell_value(t, markers_i[i]+1)
-                confidence_data[t - t0, i] = sheet.cell_value(t, markers_i[i] + 2)
-            for i in range(len(scale_bodies)):
-                scale_data[t-t0, 2*i] = sheet.cell_value(t, scale_bodies_i[i])
-                scale_data[t - t0, 2*i+1] = sheet.cell_value(t, scale_bodies_i[i]+1)
-                confidence_data[t - t0, len(markers)+i] = sheet.cell_value(t, scale_bodies_i[i]+2)
-    # confidence
-    confidence_ref = np.mean(confidence_data, axis=0)
-    print('confidences:', markers, scale_bodies)
-    print('\t', confidence_ref)
-    """for i in range(len(confidence_ref)):
-        if confidence_ref[i] < conf_th:
-            if i < len(markers):
-                unconf_body = markers[i]
-            else:
-                unconf_body = scale_bodies[i-len(markers)]
-            for ref in list(scaling_ref.keys()):
-                if unconf_body in ref.split('_'):
-                    scaling_ref.pop(ref)"""
-
-    # scaling
-    l_ref = np.zeros(len(scaling_ref))
-    std_ref = np.zeros(len(scaling_ref))
-    print(scaling_ref)
-    for i in range(len(list(scaling_ref.keys()))):
-        ref = list(scaling_ref.keys())[i]
-        ref1 = ref.split('_')[0]
-        ref2 = ref.split('_')[1]
-        if ref1 == ref2:
-            l = np.sqrt((kin_data[:, 3 * int(markers.index(ref1))] - scale_data[:, 3 * int(scale_bodies.index(contralat+'_'+ref2))]) ** 2 +
-                        (kin_data[:, 3 * int(markers.index(ref1)) + 1] - scale_data[:,
-                                                                         3 * int(scale_bodies.index(contralat+'_'+ref2)) + 1]) ** 2)
-            l_ref[i] = np.mean(l)
-            std_ref[i] = np.std(l)
-        else:
-            if ref1 in markers:
-                if ref2 in markers:
-                    l = np.sqrt((kin_data[:, 3*int(markers.index(ref1))] - kin_data[:, 3*int(markers.index(ref2))])**2 +
-                                    (kin_data[:, 3*int(markers.index(ref1))+1] - kin_data[:, 3*int(markers.index(ref2))+1])**2)
-                    l_ref[i] = np.mean(l)
-                    std_ref[i] = np.std(l)
-                else:
-                    l = np.sqrt((kin_data[:, 3*int(markers.index(ref1))] - scale_data[:, 2*int(scale_bodies.index(ref2))])**2 +
-                                    (kin_data[:, 3*int(markers.index(ref1))+1] - scale_data[:, 2*int(scale_bodies.index(ref2))+1])**2)
-                    l_ref[i] = np.mean(l)
-                    std_ref[i] = np.std(l)
-            else:
-                if ref2 in markers:
-                    l = np.sqrt((kin_data[:, 3*int(markers.index(ref2))] - scale_data[:, 2*int(scale_bodies.index(ref1))])**2 +
-                        (kin_data[:, 3*int(markers.index(ref2))+1] - scale_data[:, 2*int(scale_bodies.index(ref1))+1])**2)
-                    l_ref[i] = np.mean(l)
-                    std_ref[i] = np.std(l)
-                else:
-                    l = np.sqrt((scale_data[:, 2*int(scale_bodies.index(ref1))] -
-                                     scale_data[:, 2*int(scale_bodies.index(ref2))])**2 +
-                                    (scale_data[:, 2*int(scale_bodies.index(ref1))+1] -
-                                     scale_data[:, 2*int(scale_bodies.index(ref2))+1])**2)
-                    l_ref[i] = np.mean(l)
-                    std_ref[i] = np.std(l)
-    print('std ref:', list(scaling_ref.keys()))
-    print('\t', std_ref)
-    scaling = np.divide(l_ref, list(scaling_ref.values()))
-    print('scaling:', scaling, ', mean:', np.mean(scaling), ', std:', np.std(scaling))
-    scaling = np.mean(scaling)
-
-    if movement.split('_')[0] == 'static':
-        if ground_ref[0] in markers and ground_ref[1] in markers and isinstance(ground_ref[2], float):
-                static_ground_ref = [np.mean(kin_data[:, 3 * int(markers.index(ground_ref[0]))]),
-                                     np.mean(kin_data[:, 3 * int(markers.index(ground_ref[1]))+1]), ground_ref[2]]
-        elif ground_ref[1] in markers and ground_ref[2] in markers and isinstance(ground_ref[0], float):
-                static_ground_ref = [ground_ref[0], np.mean(kin_data[:, 3 * int(markers.index(ground_ref[1]))+1]),
-                                     np.mean(kin_data[:, 3 * int(markers.index(ground_ref[2]))])]
-        else:
-            print('TO DO')
-        for i in range(len(markers)):
-            kin_data[:, 3*i] = (kin_data[:, 3*i] - static_ground_ref[0])/scaling
-            kin_data[:, 3*i+1] = (static_ground_ref[1] - kin_data[:, 3*i+1])/scaling + 1
-            kin_data[:, 3*i+2] = static_ground_ref[2] * np.ones(len(kin_data[:, 0]))
-
-    # plot kin data
-    if plot:
-        plt.figure()
-        plt.plot(kin_data[:,0], label='sx')
-        plt.plot(kin_data[:,1], label='sy')
-        plt.plot(kin_data[:,3], label='ex')
-        plt.plot(kin_data[:,4], label='ey')
-        plt.plot(kin_data[:,6], label='wx')
-        plt.plot(kin_data[:,7], label='wy')
-        plt.legend()
-        plt.show()
+    # open file for reading
+    df = pd.read_table(kin_file, sep=",")
+    # data to extract
+    if tf == -1 :
+        tf = df['timestamp'][df.shape[0]-1]
+    index_i = np.where(df['timestamp'] >= ti)[0][0]
+    index_f = np.where(df['timestamp'] <= tf)[0][-1]
+    time = np.zeros(index_f-index_i)
+    markers_data = np.zeros((index_f-index_i, 3*len(markers)))
+    for t in range(index_i, index_f):
+            time[t-index_i] = df['timestamp'][t] - ti
+            for m in range(len(markers)):
+                markers_data[t-index_i, 3*m] = df[list(markers.values())[m]+'.x'][t]
+                markers_data[t-index_i, 3 * m+1] = df[list(markers.values())[m] + '.y'][t]
+                markers_data[t-index_i, 3 * m+2] = df[list(markers.values())[m] + '.z'][t]
 
     # write kin file
-    kin_file = open(kin_folder+'kin_'+movement+'.trc', 'w')
-    kin_file.write('PathFileType\t4\t(X/Y/Z)\t'+movement+'.trc\n')
-    kin_file.write('DataRate\tCameraRate\tNumFrames\tNumMarkers\tUnits\tOrigDataRate\tOrigDataStartFrame\tOrigNumFrames\n')
-    kin_file.write('30.00\t30.00\t'+str(len(time))+'\t3\tmm\t30.00\t1\t'+str(len(time))+'\n')
+    dt = time[1] - time[0]
+    kin_file = open(kin_folder+ 'kinematics.trc', 'w')
+    kin_file.write('PathFileType\t4\t(X/Y/Z)\t kinematics .trc\n')
+    kin_file.write(
+        'DataRate\tCameraRate\tNumFrames\tNumMarkers\tUnits\tOrigDataRate\tOrigDataStartFrame\tOrigNumFrames\n')
+    kin_file.write(str(float(1/dt))+'\t'+str(float(1/dt))+'\t' + str(len(time)) + '\t'+str(len(markers))+'\tmm\t'+str(float(1/dt))+'\t1\t' + str(len(time)) + '\n')
     kin_file.write('Frame#\tTime\t')
-    for m in markers:
-        kin_file.write(m+'\t\t\t')
+    for m in list(markers.keys()):
+        kin_file.write(m + '\t\t\t')
     kin_file.write('\n')
     kin_file.write('\t\t')
-    for i in range(len(markers)):
-        kin_file.write('X'+str(i+1)+'\tY'+str(i+1)+'\tZ'+str(i+1)+'\t')
+    for i in range(len(list(markers.keys()))):
+        kin_file.write('X' + str(i + 1) + '\tY' + str(i + 1) + '\tZ' + str(i + 1) + '\t')
     kin_file.write('\n')
     kin_file.write('\n')
     frame = 1
     for t in range(len(time)):
-        line = str(frame)+'\t'+str(time[t])
-        for i in range(3*len(markers)):
-            line += '\t'+str(kin_data[t, i]*1000)
+        line = str(frame) + '\t' + str(time[t])
+        for i in range(3 * len(markers)):
+            line += '\t' + str(markers_data[t, i] * 1000)
         line += '\n'
         kin_file.write(line)
         frame += 1
 
+    if plot:
+        plt.figure()
+        for m in range(len(list(markers.keys()))):
+            plt.plot(time, markers_data[:, 3 * m], label=list(markers.keys())[m] + '_x')
+            plt.plot(time, markers_data[:, 3 * m + 1], label=list(markers.keys())[m] + '_y')
+            plt.plot(time, markers_data[:, 3 * m + 2], label=list(markers.keys())[m] + '_z')
+        plt.legend()
+        plt.show()
+
     if smoothing is not None:
-        smooth_kin_data = moving_average(kin_data, smoothing)
+        smooth_kin_data = moving_average(markers_data, smoothing)
         smooth_time = time
         # write kin file
-        kin_file = open(kin_folder + 'smooth_kin_' + movement + '.trc', 'w')
-        kin_file.write('PathFileType\t4\t(X/Y/Z)\t' + movement + '.trc\n')
+        kin_file = open(kin_folder + 'smooth_kinematics.trc', 'w')
+        kin_file.write('PathFileType\t4\t(X/Y/Z)\t smooth kinematics .trc\n')
         kin_file.write(
             'DataRate\tCameraRate\tNumFrames\tNumMarkers\tUnits\tOrigDataRate\tOrigDataStartFrame\tOrigNumFrames\n')
-        kin_file.write('30.00\t30.00\t' + str(len(smooth_time)) + '\t3\tmm\t30.00\t1\t' + str(len(smooth_time)) + '\n')
+        kin_file.write(str(float(1/dt))+'\t'+str(float(1/dt))+'\t'+str(len(smooth_time)) + '\t'+str(len(markers))+
+                       '\tmm\t'+str(float(1/dt))+'\t1\t' + str(len(smooth_time)) + '\n')
         kin_file.write('Frame#\tTime\t')
         for m in markers:
             kin_file.write(m + '\t\t\t')
         kin_file.write('\n')
         kin_file.write('\t\t')
-        for i in range(len(markers)):
+        for i in range(len(list(markers.keys()))):
             kin_file.write('X' + str(i + 1) + '\tY' + str(i + 1) + '\tZ' + str(i + 1) + '\t')
         kin_file.write('\n')
         kin_file.write('\n')
@@ -399,16 +221,12 @@ def scaling_kin_data(kin_folder, movement, ti, tf, markers, scaling_ref, ground_
         # plot smooth kin data
         if plot:
             plt.figure()
-            plt.plot(smooth_kin_data[:, 0], label='sx')
-            plt.plot(smooth_kin_data[:, 1], label='sy')
-            plt.plot(smooth_kin_data[:, 3], label='ex')
-            plt.plot(smooth_kin_data[:, 4], label='ey')
-            plt.plot(smooth_kin_data[:, 6], label='wx')
-            plt.plot(smooth_kin_data[:, 7], label='wy')
+            for m in range(len(list(markers.keys()))):
+                plt.plot(smooth_time, smooth_kin_data[:, 3*m], label=list(markers.keys())[m]+'_x')
+                plt.plot(smooth_time, smooth_kin_data[:, 3*m+1], label=list(markers.keys())[m]+'_y')
+                plt.plot(smooth_time, smooth_kin_data[:, 3 * m+2], label=list(markers.keys())[m] + '_z')
             plt.legend()
             plt.show()
-
-    return scaling, static_ground_ref
 
 
 def moving_average(x, w):

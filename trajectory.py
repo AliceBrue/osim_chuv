@@ -12,11 +12,11 @@ def main():
 
     if traj:
         # Define trajectory velocity bell shaped profile
-        movement = 'large_sh_flexion'  # 'sh_flexion'
+        movement = 'sh_flexion'  # 'large_sh_flexion'
         period = 1
         freq = 50
         sh_pos_i = 5
-        sh_pos_f = 120  # 80
+        sh_pos_f = 80  # 120
         elb_pos_i = 15
         time = np.linspace(0, period, period*freq)
 
@@ -93,7 +93,7 @@ def main():
         movement = 'large_sh_flexion'
         osim_file = 'models/full_arm_M_chuv.osim'
         osim_file = modify_default_Coord(osim_file, 'shoulder_elev', 0.1)
-        osim_file = modify_default_Coord(osim_file, 'elv_angle', 1.4)
+        osim_file = modify_default_Coord(osim_file, 'elv_angle', 1.45)
         osim_file = modify_default_Coord(osim_file, 'shoulder_rot', 0.15)
         osim_file = modify_default_Coord(osim_file, 'elbow_flexion', 0.3)
         ik_file = 'trajectories/'+movement+'/IK_'+movement+'.mot'
