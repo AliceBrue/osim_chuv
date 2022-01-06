@@ -18,7 +18,7 @@ def main():
     saved in 'save_folder'
     """
 
-    case = 'UP00'  # 'Henri' or 'NM00'
+    case = 'UP00'  # 'Henri' or 'NM00'  # IK KIN, INIT KIN
 
     if case == 'Henri':
         #: Osim model
@@ -146,7 +146,7 @@ def main():
         # Patient
         id = 1
         recording = 'test_flexion'
-        kin_file = 'C:/Users/Acer/Desktop/Pour alice/UP00' + str(id) + '/'+recording+'/df_cam1_916512060805_record_17_11_2021_1449_36.csv'
+        kin_file = 'C:/Users/Acer/Desktop/Pour alice/UP00' + str(id) + '/'+recording+'/df_cam1_816612061599_record_17_11_2021_1555_35.csv'
         IK_ref_file = None
 
         osim_file = 'models/wrap_upperLeft.osim'
@@ -161,8 +161,8 @@ def main():
 
         # ADD SEVERAL MUSCLES
         osim_muscle_names = ['BICshort', 'TRIlong', 'TRIlat', 'DELT1', 'DELT2', 'DELT3', 'PECM1', 'PECM3', 'INFSP',
-                             'SUPSP', 'TRAPS', 'TRAPI', 'IMU', 'THE', 'BRA', 'FDSM', 'BRD', 'FPL', 'FCR', 'FCU', 'ECU',
-                             'EPB', 'ECR', 'ED', 'BIClong', 'FD2', 'PT', 'LAT2', 'IMU2']
+                             'SUPSP', 'TRAPS', 'TRAPI', 'IMU', 'THE', 'FPL', 'EPB', 'FD2', 'BRA', 'FCR', 'ECR', 'PT', 'FDSM', 'BRD', 'FCU', 'ECU',
+                             'ED', 'BIClong', 'LAT2', 'IMU2']
 
         ti = 52  # in sec
         tf = 60  # -1 to simulate entire stim period
