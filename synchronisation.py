@@ -18,7 +18,7 @@ def main():
     imu_file = 'C:/Users/Acer/Desktop/Pour alice/UP00' + str(id) + '/'+recording+'/imu_data.txt'
     imu_names = 'C:/Users/Acer/Desktop/Pour alice/UP00' + str(id) + '/'+recording+'/imu_names.txt'
 
-    bodies = ['left_wrist', 'left_elbow']
+    bodies = ['left_wrist', 'left_elbow', 'left_shoulder']
     muscles = ['BBsh', 'FD34']
     ti = 0
     tf = -1
@@ -41,8 +41,8 @@ def main():
     kin = kin_data2[:, 4 * b + kin_coord]
     imu = np.interp(kin_time2, imu_time, imu_data[:, 3 * m + imu_coord])
     coord_labels = ['.x', '.y', '.z']
-    #cross_correlation(kin, imu, kin_time2, xlabel=bodies[b]+coord_labels[kin_coord],
-    #                  ylabel=muscles[m]+coord_labels[kin_coord])
+    cross_correlation(kin, imu, kin_time2, xlabel=bodies[b]+coord_labels[kin_coord],
+                      ylabel=muscles[m]+coord_labels[kin_coord])
 
 
     """# comparison
@@ -171,7 +171,7 @@ def plot_kin_3D(kin_file, bodies, ti=0, tf=-1, fproba=False):
                     ax.plot(x[b], y[b], z[b], c=cmap(1 - 0.8*t / len(time)), marker='o', ms=3 + 2*b, label=bodies[b]+'_f')
                 else:
                     ax.plot(x[b], y[b], z[b], c=cmap(1 - 0.8*t / len(time)), marker='o', ms=3 + 2*b)
-            ax.plot(x, y, z, c=cmap(1 - t / len(time)))
+            ax.plot(x, y, z, c=cmap(1 - 0.8*t / len(time)))
             ax.legend()
             ax.set_xlabel('x')
             ax.set_ylabel('y')
